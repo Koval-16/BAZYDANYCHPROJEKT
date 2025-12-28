@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tabela Ligowa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Opcjonalne: pogrubienie kolumny z punktami */
+        .points-col {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-light container mt-5">
+
+<a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć</a>
+
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h3 class="mb-0">Tabela Ligowa</h3>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0 text-center align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th style="width: 50px;">#</th> <th class="text-start">Drużyna</th>
+                <th title="Mecze Rozegrane">M</th>
+                <th title="Wygrane">W</th>
+                <th title="Remisy">R</th>
+                <th title="Porażki">P</th>
+                <th title="Bramki (Zdobyte : Stracone)">Bramki</th>
+                <th title="Bilans Bramkowy">+/-</th>
+                <th class="points-col" title="Punkty">Pkt</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row, stat : ${table}">
+
+                <td class="fw-bold" th:text="${stat.count}">1</td>
+
+                <td class="text-start fw-bold" th:text="${row.druzyna}">Nazwa Klubu</td>
+
+                <td th:text="${row.mecze_zagrane}">10</td>
+                <td th:text="${row.wygrane}">5</td>
+                <td th:text="${row.remisy}">3</td>
+                <td th:text="${row.porazki}">2</td>
+
+                <td>
+                    <span th:text="${row.gole_zdobyte}">15</span> :
+                    <span th:text="${row.gole_stracone}">10</span>
+                </td>
+
+                <td>
+                            <span th:text="${row.gole_roznica}"
+                                  th:class="${row.gole_roznica > 0} ? 'text-success fw-bold' : (${row.gole_roznica < 0} ? 'text-danger' : 'text-muted')">
+                                +5
+                            </span>
+                </td>
+
+                <td class="points-col h5 mb-0" th:text="${row.punkty}">18</td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(table)}">
+                <td colspan="9" class="text-center py-4 text-muted">
+                    Brak danych tabeli dla wybranej ligi/sezonu.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

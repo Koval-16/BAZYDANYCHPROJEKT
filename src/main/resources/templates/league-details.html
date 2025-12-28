@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Szczegóły Ligi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<a href="/ligi" class="btn btn-outline-secondary mb-3">&larr; Wróć do listy lig</a>
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0" th:if="${!#lists.isEmpty(ls)}"
+            th:text="'Historia: ' + ${ls[0].ligaNazwa}">Szczegóły Ligi</h3>
+        <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Brak danych</h3>
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0 align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Sezon (Rok)</th>
+                <th>Początek</th>
+                <th>Koniec</th>
+                <th>Status</th>
+                <th class="text-end">Akcja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${ls}">
+                <td class="fw-bold">
+                    <a th:href="@{/rozgrywki/{id}(id=${item.id})}"
+                       class="text-decoration-none text-dark"
+                       th:text="${item.sezonRok}">2024</a>
+                </td>
+
+                <td th:text="${item.sezonDataPoczatku}">2024-01-01</td>
+                <td th:text="${item.sezonDataKonca}">2024-12-31</td>
+
+                <td>
+                    <span th:if="${item.sezonCzyAktywny}" class="badge bg-success">Trwa</span>
+                    <span th:unless="${item.sezonCzyAktywny}" class="badge bg-secondary">Archiwalny</span>
+                </td>
+
+                <td class="text-end">
+                    <a th:href="@{/rozgrywki/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary">
+                        Wybierz &rarr;
+                    </a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(ls)}">
+                <td colspan="5" class="text-center py-4 text-muted">
+                    Ta liga nie brała udziału w żadnym sezonie.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

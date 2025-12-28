@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Szczegóły Sezonu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<a href="/sezony" class="btn btn-outline-secondary mb-3">&larr; Wróć do listy sezonów</a>
+
+<div class="card shadow">
+    <div class="card-header bg-dark text-white">
+        <h3 class="mb-0" th:if="${!#lists.isEmpty(ls)}"
+            th:text="'Rozgrywki w sezonie: ' + ${ls[0].sezonRok}">Sezon</h3>
+        <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Brak danych</h3>
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0 align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Nazwa Ligi</th>
+                <th>Skrót</th>
+                <th>Daty trwania</th>
+                <th>Status</th>
+                <th class="text-end">Akcja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${ls}">
+
+                <td class="fw-bold" th:text="${item.ligaNazwa}">Ekstraklasa</td>
+
+                <td>
+                    <span class="badge bg-light text-dark border" th:text="${item.ligaSkrot}">EKS</span>
+                </td>
+
+                <td>
+                    <small class="text-muted">
+                        <span th:text="${item.sezonDataPoczatku}"></span> -
+                        <span th:text="${item.sezonDataKonca}"></span>
+                    </small>
+                </td>
+
+                <td>
+                    <span th:if="${item.sezonCzyAktywny}" class="badge bg-success">Aktywna</span>
+                    <span th:unless="${item.sezonCzyAktywny}" class="badge bg-secondary">Zakończona</span>
+                </td>
+
+                <td class="text-end">
+                    <a th:href="@{/rozgrywki/{id}(id=${item.id})}" class="btn btn-sm btn-outline-dark">
+                        Tabela / Mecze
+                    </a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(ls)}">
+                <td colspan="5" class="text-center py-4 text-muted">
+                    Brak lig przypisanych do tego sezonu.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

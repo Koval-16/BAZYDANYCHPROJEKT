@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Panel Administratora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <span class="navbar-brand">🛡️ Panel Admina</span>
+        <div class="d-flex align-items-center text-white">
+            Witaj, <strong class="ms-1 me-3" sec:authentication="name"></strong>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-sm btn-outline-light">Wyloguj</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Zarządzanie Ligą</h2>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">📅</div>
+                    <h5 class="card-title">Mecze</h5>
+                    <p class="card-text text-muted">Przeglądaj terminarz i wyniki.</p>
+                    <a href="/mecze" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <div class="h1 mb-3">🏆</div>
+                    <h5 class="card-title">Kluby</h5>
+                    <p class="card-text text-muted">Zarządzaj listą drużyn.</p>
+                    <a href="/druzyny" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <div class="h1 mb-3">👟</div>
+                    <h5 class="card-title">Piłkarze</h5>
+                    <p class="card-text text-muted">Lista zawodników.</p>
+                    <a href="/pilkarze" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <div class="h1 mb-3">🚩</div>
+                    <h5 class="card-title">Sędziowie</h5>
+                    <p class="card-text text-muted">Lista sędziów.</p>
+                    <a href="/sedziowie" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <div class="h1 mb-3">🗓️</div>
+                    <h5 class="card-title">Sezony</h5>
+                    <p class="card-text text-muted">Historia sezonów i tabele.</p>
+                    <a href="/sezony" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm">
+                <div class="card-body">
+                    <div class="h1 mb-3">🌍</div>
+                    <h5 class="card-title">Ligi</h5>
+                    <p class="card-text text-muted">Dostępne ligi.</p>
+                    <a href="/ligi" class="btn btn-dark w-100">Przejdź</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

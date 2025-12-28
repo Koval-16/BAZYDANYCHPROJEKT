@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminarz Meczów</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">⚽ Liga Lokalna - Terminarz</span>
+    </div>
+</nav>
+
+<div class="container">
+
+    <a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć do Hubu</a>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Wszystkie Mecze</h2>
+        <div>
+            <span class="text-muted small me-2">Filtr ligi (TODO):</span>
+            <button class="btn btn-sm btn-outline-secondary">Liga 1</button>
+            <button class="btn btn-sm btn-outline-secondary">Liga 2</button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Data</th>
+                    <th scope="col" class="text-end">Gospodarz</th>
+                    <th scope="col" class="text-center" style="width: 100px;">Wynik</th>
+                    <th scope="col">Gość</th>
+                    <th scope="col">Sędzia</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mecz : ${mecze}">
+
+                    <td th:text="${mecz.data}">2025-05-12</td>
+
+                    <td class="text-end fw-bold" th:text="${mecz.gospodarzNazwa}">Odra Opole</td>
+
+                    <td class="text-center">
+                            <span th:if="${mecz.czyZagrany}" class="badge bg-success fs-6">
+                                <span th:text="${mecz.wynikGospodarz}">2</span> : <span th:text="${mecz.wynikGosc}">1</span>
+                            </span>
+
+                        <span th:unless="${mecz.czyZagrany}" class="badge bg-secondary">
+                                vs
+                            </span>
+                    </td>
+
+                    <td class="fw-bold" th:text="${mecz.goscNazwa}">Śląsk Wrocław</td>
+
+                    <td class="text-muted small">
+                        <i class="bi bi-whistle"></i>
+                        <span th:text="${mecz.sedziaImieNazwisko != null} ? ${mecz.sedziaImieNazwisko} : 'Brak obsady'"></span>
+                    </td>
+
+                    <td>
+                        <span th:if="${mecz.czyZagrany}" class="text-success small fw-bold">Zakończony</span>
+                        <span th:unless="${mecz.czyZagrany}" class="text-secondary small">Zaplanowany</span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(mecze)}">
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        Brak meczów do wyświetlenia.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
