@@ -24,8 +24,8 @@ public class UserDto {
     }
 
     // Gettery (wymagane przez Thymeleaf)
-    public String getImie() { return name; }
-    public String getNazwisko() { return surname; }
-    public String getNarodowosc() { return nationality; }
-    public int getWiek() { return age; }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public String getNationality() { return nationality; }
+    public int getAge() { return age; }
 }

@@ -18,23 +18,23 @@ public class RefereeView {
     private Integer id;
 
     @Column(name = "ListaSedziowSedziaImie")
-    private String imie;
+    private String name;
 
     @Column(name = "ListaSedziowSedziaNazwisko")
-    private String nazwisko;
+    private String surname;
 
     @Column(name = "ListaSedziowSedziaNarodowosc")
-    private String narodowosc;
+    private String nationality;
 
     @Column(name = "ListaSedziowSedziaLiczbaMeczow")
-    private Integer liczbaMeczy;
+    private Integer matchCount;
 
     public RefereeView() {}
 
     // --- GETTERY ---
     public Integer getId() { return id; }
-    public String getImie() { return imie; }
-    public String getNazwisko() { return nazwisko; }
-    public String getNarodowosc() { return narodowosc; }
-    public Integer getLiczbaMeczy() { return liczbaMeczy; }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public String getNationality() { return nationality; }
+    public Integer getMatchCount() { return matchCount; }
 }

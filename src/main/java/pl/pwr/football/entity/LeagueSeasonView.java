@@ -15,54 +15,54 @@ public class LeagueSeasonView {
     private Integer id;
 
     @Column(name = "WidokLigSezonID")
-    private Integer sezonId;
+    private Integer seasonId;
 
     @Column(name = "WidokLigSezonRok")
-    private Integer sezonRok;
+    private Integer seasonYear;
 
     @Column(name = "WidokLigSezonDataPoczatku")
-    private LocalDate sezonDataPoczatku;
+    private LocalDate seasonDateStart;
 
     @Column(name = "WidokLigSezonDataKonca")
-    private LocalDate sezonDataKonca;
+    private LocalDate seasonDateEnd;
 
     @Column(name = "WidokLigSezonCzyAktywny")
-    private boolean sezonCzyAktywny;
+    private boolean seasonIsActive;
 
     @Column(name = "WidokLigLigaID")
-    private Integer ligaId;
+    private Integer leagueId;
 
     @Column(name = "WidokLigLigaNazwa")
-    private String ligaNazwa;
+    private String leagueName;
 
     @Column(name = "WidokLigLigaSkrot")
-    private String ligaSkrot;
+    private String leagueAbbreviation;
 
     public LeagueSeasonView() {}
 
     public Integer getId() {
         return id;
     }
-    public Integer getLigaId() {
-        return ligaId;
+    public Integer getLeagueId() {
+        return leagueId;
     }
-    public Integer getSezonId() {
-        return sezonId;
+    public Integer getSeasonId() {
+        return seasonId;
     }
-    public Integer getSezonRok() {
-        return sezonRok;
+    public Integer getSeasonYear() {
+        return seasonYear;
     }
-    public LocalDate getSezonDataKonca() {
-        return sezonDataKonca;
+    public LocalDate getSeasonDateEnd() {
+        return seasonDateEnd;
     }
-    public LocalDate getSezonDataPoczatku() {
-        return sezonDataPoczatku;
+    public LocalDate getSeasonDateStart() {
+        return seasonDateStart;
     }
-    public String getLigaNazwa() {
-        return ligaNazwa;
+    public String getLeagueName() {
+        return leagueName;
     }
-    public String getLigaSkrot() {
-        return ligaSkrot;
+    public String getLeagueAbbreviation() {
+        return leagueAbbreviation;
     }
-    public boolean getSezonCzyAktywny(){return sezonCzyAktywny;}
+    public boolean getSeasonIsActive(){return seasonIsActive;}
 }

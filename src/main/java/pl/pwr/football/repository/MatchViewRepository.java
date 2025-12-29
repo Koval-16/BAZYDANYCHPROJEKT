@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface MatchViewRepository extends JpaRepository<MatchView, Integer> {
 
-    List<MatchView> findByLigaSezonId(Integer ligaSezonId);
+    List<MatchView> findByLeagueSeasonId(Integer leagueSeasonId);
 
-    List<MatchView> findByGospodarzIdOrGoscId(Integer gospodarzId, Integer goscId);
+    List<MatchView> findByHostIdOrAwayId(Integer hostId, Integer awayId);
 
-    @Query("SELECT m FROM MatchView m WHERE (m.gospodarzId = :teamId OR m.goscId = :teamId) AND m.czyZagrany = true ORDER BY m.data DESC")
+    @Query("SELECT m FROM MatchView m WHERE (m.hostId = :teamId OR m.awayId = :teamId) AND m.isPlayed = true ORDER BY m.date DESC")
     List<MatchView> findLastMatches(@Param("teamId") Integer teamId, Pageable pageable);
 
     // 2. Następne 5 meczów (Zagrane = false, Sortowanie: Data ROSNĄCO)
-    @Query("SELECT m FROM MatchView m WHERE (m.gospodarzId = :teamId OR m.goscId = :teamId) AND m.czyZagrany = false ORDER BY m.data ASC")
+    @Query("SELECT m FROM MatchView m WHERE (m.hostId = :teamId OR m.awayId = :teamId) AND m.isPlayed = false ORDER BY m.date ASC")
     List<MatchView> findNextMatches(@Param("teamId") Integer teamId, Pageable pageable);
 
 }

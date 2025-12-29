@@ -11,7 +11,7 @@
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
         <h3 class="mb-0" th:if="${!#lists.isEmpty(ls)}"
-            th:text="'Historia: ' + ${ls[0].ligaNazwa}">Szczegóły Ligi</h3>
+            th:text="'Historia: ' + ${ls[0].leagueName}">Szczegóły Ligi</h3>
         <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Brak danych</h3>
     </div>
 
@@ -31,15 +31,15 @@
                 <td class="fw-bold">
                     <a th:href="@{/rozgrywki/{id}(id=${item.id})}"
                        class="text-decoration-none text-dark"
-                       th:text="${item.sezonRok}">2024</a>
+                       th:text="${item.seasonYear}">2024</a>
                 </td>
 
-                <td th:text="${item.sezonDataPoczatku}">2024-01-01</td>
-                <td th:text="${item.sezonDataKonca}">2024-12-31</td>
+                <td th:text="${item.seasonDateStart}">2024-01-01</td>
+                <td th:text="${item.seasonDateEnd}">2024-12-31</td>
 
                 <td>
-                    <span th:if="${item.sezonCzyAktywny}" class="badge bg-success">Trwa</span>
-                    <span th:unless="${item.sezonCzyAktywny}" class="badge bg-secondary">Archiwalny</span>
+                    <span th:if="${item.seasonIsActive}" class="badge bg-success">Trwa</span>
+                    <span th:unless="${item.seasonIsActive}" class="badge bg-secondary">Archiwalny</span>
                 </td>
 
                 <td class="text-end">

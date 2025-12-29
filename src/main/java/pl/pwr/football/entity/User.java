@@ -20,51 +20,49 @@ public class User {
     private String login;
 
     @Column(name = "UzytkownikHaslo", nullable = false)
-    private String haslo;
+    private String password;
 
     @Column(name = "UzytkownikImie")
-    private String imie;
+    private String name;
 
     @Column(name = "UzytkownikNazwisko")
-    private String nazwisko;
+    private String surname;
 
     @Column(name = "UzytkownikDataUrodzenia")
-    private LocalDate dataUrodzenia;
+    private LocalDate birthDate;
 
     @Column(name = "UzytkownikNarodowosc")
-    private String narodowosc;
+    private String nationality;
 
     @Column(name = "UzytkownikAdres")
-    private String adres;
+    private String address;
 
     @Column(name = "UzytkownikSzukaKlubu")
-    private Boolean szukaKlubu;
+    private Boolean lookingForClub;
 
-    // --- Pusty konstruktor (wymagany przez JPA) ---
     public User() {
     }
 
     // --- RĘCZNE GETTERY (Naprawa błędów) ---
     public Integer getId() { return id; }
-    public Role getRole() { return role; }       // To naprawia error: method getRole()
-    public String getLogin() { return login; }   // To naprawia error: method getLogin()
-    public String getHaslo() { return haslo; }   // To naprawia error: method getHaslo()
-    public String getImie() { return imie; }
-    public String getNazwisko() { return nazwisko; }
-    public LocalDate getDataUrodzenia() { return dataUrodzenia; }
-    public String getNarodowosc() { return narodowosc; }
-    public String getAdres() { return adres; }
-    public Boolean getSzukaKlubu() { return szukaKlubu; }
+    public Role getRole() { return role; }
+    public String getLogin() { return login; }
+    public String getPassword() { return password; }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public String getNationality() { return nationality; }
+    public String getAddress() { return address; }
+    public Boolean getLookingForClub() { return lookingForClub; }
 
-    // --- RĘCZNE SETTERY (Potrzebne, żeby Spring mógł wpisać dane z bazy do obiektu) ---
     public void setId(Integer id) { this.id = id; }
     public void setRole(Role role) { this.role = role; }
     public void setLogin(String login) { this.login = login; }
-    public void setHaslo(String haslo) { this.haslo = haslo; }
-    public void setImie(String imie) { this.imie = imie; }
-    public void setNazwisko(String nazwisko) { this.nazwisko = nazwisko; }
-    public void setDataUrodzenia(LocalDate dataUrodzenia) { this.dataUrodzenia = dataUrodzenia; }
-    public void setNarodowosc(String narodowosc) { this.narodowosc = narodowosc; }
-    public void setAdres(String adres) { this.adres = adres; }
-    public void setSzukaKlubu(Boolean szukaKlubu) { this.szukaKlubu = szukaKlubu; }
+    public void setPassword(String haslo) { this.password = haslo; }
+    public void setName(String imie) { this.name = imie; }
+    public void setSurname(String nazwisko) { this.surname = nazwisko; }
+    public void setBirthDate(LocalDate dataUrodzenia) { this.birthDate = dataUrodzenia; }
+    public void setNationality(String narodowosc) { this.nationality = narodowosc; }
+    public void setAddress(String adres) { this.address = adres; }
+    public void setLookingForClub(Boolean szukaKlubu) { this.lookingForClub = szukaKlubu; }
 }

@@ -16,11 +16,11 @@ public class LeagueSeasonViewService {
     }
 
     public List<LeagueSeasonView> get_leagueseason_by_league_id(Integer ligaID){
-        return leagueSeasonViewRepository.findByLigaId(ligaID);
+        return leagueSeasonViewRepository.findByLeagueId(ligaID);
     }
 
     public List<LeagueSeasonView> get_leagueseason_by_season_id(Integer sezonID){
-        return leagueSeasonViewRepository.findBySezonId(sezonID);
+        return leagueSeasonViewRepository.findBySeasonId(sezonID);
     }
 
 }

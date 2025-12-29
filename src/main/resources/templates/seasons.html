@@ -28,19 +28,19 @@
                 <td class="fw-bold">
                     <a th:href="@{/sezony/{sez}(sez=${season.getSezonID})}"
                        class="text-decoration-none text-dark"
-                       th:text="${season.getSezonRok}">2024/2025</a>
+                       th:text="${season.getSeasonYear()}">2024/2025</a>
                 </td>
 
-                <td th:text="${season.getSezonDataPoczatku}">2024-08-01</td>
-                <td th:text="${season.getSezonDataKonca}">2025-06-01</td>
+                <td th:text="${season.getSeasonStartDate()}">2024-08-01</td>
+                <td th:text="${season.getSeasonEndDate()}">2025-06-01</td>
 
                 <td>
-                    <span th:if="${season.getSezonCzyAktywny}" class="badge bg-success">Trwa</span>
-                    <span th:unless="${season.getSezonCzyAktywny}" class="badge bg-secondary">Zakończony</span>
+                    <span th:if="${season.getSeasonIsActive()}" class="badge bg-success">Trwa</span>
+                    <span th:unless="${season.getSeasonIsActive()}" class="badge bg-secondary">Zakończony</span>
                 </td>
 
                 <td class="text-end">
-                    <a th:href="@{/sezony/{sez}(sez=${season.getSezonID})}" class="btn btn-sm btn-outline-primary">
+                    <a th:href="@{/sezony/{sez}(sez=${season.getSeasonId()})}" class="btn btn-sm btn-outline-primary">
                         Wybierz &rarr;
                     </a>
                 </td>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Drużynę</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <a href="/druzyny" class="btn btn-outline-secondary mb-3">&larr; Anuluj i wróć</a>
+
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">➕ Dodaj Nową Drużynę</h4>
+            </div>
+            <div class="card-body">
+
+                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                <form th:action="@{/admin/druzyny/nowa}" th:object="${teamDto}" method="post">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-8">
+                            <label class="form-label">Nazwa Drużyny</label>
+                            <input type="text" class="form-control" th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{name}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Skrót (3-4 znaki)</label>
+                            <input type="text" class="form-control" th:field="*{abbreviation}"
+                                   th:classappend="${#fields.hasErrors('abbreviation')} ? 'is-invalid'"
+                                   style="text-transform: uppercase;">
+                            <div class="invalid-feedback" th:errors="*{abbreviation}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Stroje Domowe</label>
+                            <input type="text" class="form-control" th:field="*{kitsHome}"
+                                   th:classappend="${#fields.hasErrors('kitsHome')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{kitsHome}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Stroje Wyjazdowe</label>
+                            <input type="text" class="form-control" th:field="*{kitsAway}"
+                                   th:classappend="${#fields.hasErrors('kitsAway')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{kitsAway}">Błąd</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Stadion</label>
+                            <input type="text" class="form-control" th:field="*{stadium}"
+                                   th:classappend="${#fields.hasErrors('stadium')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{stadium}">Błąd</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Adres Klubu</label>
+                            <input type="text" class="form-control" th:field="*{address}"
+                                   th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{address}">Błąd</div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="alert alert-info py-2 small">
+                                ℹ️ Data założenia zostanie automatycznie ustawiona na dzień dzisiejszy.
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-success px-4">Zapisz drużynę</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

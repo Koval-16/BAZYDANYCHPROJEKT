@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TableViewRepository extends JpaRepository<TableView, Integer> {
 
-    List<TableView> findByLigaSezonID(Integer id, Sort sort);
+    List<TableView> findByLeagueSeasonId(Integer id, Sort sort);
 
 }

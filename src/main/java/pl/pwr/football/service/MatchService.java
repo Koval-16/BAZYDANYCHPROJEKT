@@ -21,15 +21,14 @@ public class MatchService {
     }
 
     public List<MatchView> get_matches_by_league(Integer ligaSezonId) {
-        return matchViewRepository.findByLigaSezonId(ligaSezonId);
+        return matchViewRepository.findByLeagueSeasonId(ligaSezonId);
     }
 
     public List<MatchView> get_matches_by_team(Integer gospodarzId, Integer goscId){
-        return matchViewRepository.findByGospodarzIdOrGoscId(gospodarzId, goscId);
+        return matchViewRepository.findByHostIdOrAwayId(gospodarzId, goscId);
     }
 
     public List<MatchView> getLast5Matches(Integer teamId) {
-        // PageRequest.of(0, 5) oznacza: Daj mi pierwszą stronę, rozmiar 5 (czyli LIMIT 5)
         return matchViewRepository.findLastMatches(teamId, PageRequest.of(0, 5));
     }
 

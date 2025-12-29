@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LeagueSeasonViewRepository extends JpaRepository<LeagueSeasonView, Integer> {
 
-    List<LeagueSeasonView> findByLigaId(Integer ligaId);
-    List<LeagueSeasonView> findBySezonId(Integer sezonId);
+    List<LeagueSeasonView> findByLeagueId(Integer leagueId);
+    List<LeagueSeasonView> findBySeasonId(Integer seasonId);
 
 }

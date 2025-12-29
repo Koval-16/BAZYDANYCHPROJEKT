@@ -16,46 +16,46 @@ public class TableView {
     private Integer id;
 
     @Column(name = "TabelaLigaSezonID")
-    private Integer ligaSezonID;
+    private Integer leagueSeasonId;
 
     @Column(name = "TabelaDruzynaNazwa")
-    private String druzyna;
+    private String team;
 
     @Column(name = "TabeleMeczeZagrane")
-    private Integer meczeZagrane;
+    private Integer matchesPlayed;
 
     @Column(name = "TabelaPunkty")
-    private Integer punkty;
+    private Integer points;
 
     @Column(name = "TabelaWygrane")
-    private Integer wygrane;
+    private Integer wins;
 
     @Column(name = "TabelaRemisy")
-    private Integer remisy;
+    private Integer draws;
 
     @Column(name = "TabelaPorazki")
-    private Integer porazki;
+    private Integer defeats;
 
     @Column(name = "TabelaGoleZdobyte")
-    private Integer goleZdobyte;
+    private Integer goalsScored;
 
     @Column(name = "TabelaGoleStracone")
-    private Integer goleStracone;
+    private Integer goalsConceded;
 
     @Column(name = "TabelaGoleRoznica")
-    private Integer goleRoznica;
+    private Integer goalDifference;
 
     public TableView(){}
 
     public Integer getId() {return id;}
-    public Integer getLigaSezonID() {return ligaSezonID;}
-    public String getDruzyna() {return druzyna;}
-    public Integer getWygrane() {return wygrane;}
-    public Integer getRemisy() {return remisy;}
-    public Integer getPorazki() {return porazki;}
-    public Integer getPunkty() {return punkty;}
-    public Integer getMecze_zagrane() {return meczeZagrane;}
-    public Integer getGole_zdobyte() {return goleZdobyte;}
-    public Integer getGole_stracone() {return goleStracone;}
-    public Integer getGole_roznica() {return goleRoznica;}
+    public Integer getLeagueSeasonId() {return leagueSeasonId;}
+    public String getTeam() {return team;}
+    public Integer getWins() {return wins;}
+    public Integer getDraws() {return draws;}
+    public Integer getDefeats() {return defeats;}
+    public Integer getPoints() {return points;}
+    public Integer getMatchesPlayed() {return matchesPlayed;}
+    public Integer getGoalsScored() {return goalsScored;}
+    public Integer getGoalsConceded() {return goalsConceded;}
+    public Integer getGoalDifference() {return goalDifference;}
 }

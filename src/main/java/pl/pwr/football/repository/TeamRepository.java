@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface TeamRepository extends JpaRepository<Team,Integer> {
     //Optional<Team> findById(Integer id);
     //List<Team> findAll();
+    boolean existsByName(String name);
+    boolean existsByAbbreviation(String abbreviation);
 }

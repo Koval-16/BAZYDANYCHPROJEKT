@@ -22,7 +22,7 @@ public class TableService {
                 .and(Sort.by(Sort.Direction.DESC, "goleRoznica"))
                 .and(Sort.by(Sort.Direction.DESC, "goleZdobyte"));
 
-        return tableViewRepository.findByLigaSezonID(id,sorting);
+        return tableViewRepository.findByLeagueSeasonId(id,sorting);
     }
 
 }

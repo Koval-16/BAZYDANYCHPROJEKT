@@ -15,38 +15,36 @@ public class PlayerView {
     private Integer id;
 
     @Column(name = "ListaPilkarzyPilkarzImie")
-    private String imie;
+    private String name;
 
     @Column(name = "ListaPilkarzyPilkarzNazwisko")
-    private String nazwisko;
+    private String surname;
 
     @Column(name = "ListaPilkarzyPilkarzNarodowosc")
-    private String narodowosc;
+    private String nationality;
 
     @Column(name = "ListaPilkarzyPilkarzDataUrodzenia")
-    private LocalDate dataUrodzenia;
+    private LocalDate birthDate;
 
     @Column(name = "ListaPilkarzyDruzynaNazwa")
-    private String druzynaNazwa; // Mamy to gotowe z widoku!
+    private String teamName; // Mamy to gotowe z widoku!
 
     @Column(name = "ListaPilkarzyDruzynaID")
-    private Integer druzynaID;
+    private Integer teamId;
 
     // Konstruktor
     public PlayerView() {}
 
     // --- GETTERY ---
     public Integer getId() { return id; }
-    public String getImie() { return imie; }
-    public String getNazwisko() { return nazwisko; }
-    public String getNarodowosc() { return narodowosc; }
-    public String getDruzynaNazwa() { return druzynaNazwa; }
-    public Integer getDruzynaID() {return druzynaID;}
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public String getNationality() { return nationality; }
+    public String getTeamName() { return teamName; }
+    public Integer getTeamId() {return teamId;}
 
-    // --- LOGIKA BIZNESOWA W WIDOKU ---
-    // Obliczamy wiek na podstawie daty urodzenia z bazy
     public int getWiek() {
-        if (dataUrodzenia == null) return 0;
-        return Period.between(dataUrodzenia, LocalDate.now()).getYears();
+        if (birthDate == null) return 0;
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 }

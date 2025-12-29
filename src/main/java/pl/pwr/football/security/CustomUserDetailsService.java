@@ -23,15 +23,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono: " + username));
 
-        var authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().getNazwa());
+        var authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().getName());
 
         return new AppUserDetails(
                 user.getLogin(),
-                user.getHaslo(),
+                user.getPassword(),
                 Collections.singletonList(authority),
                 user.getId(),
-                user.getImie(),
-                user.getNazwisko()
+                user.getName(),
+                user.getSurname()
         );
     }
 }

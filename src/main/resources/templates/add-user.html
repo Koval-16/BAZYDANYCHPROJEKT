@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Użytkownika</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć do panelu</a>
+
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">👤 Dodaj: Trenera / Sędziego / Piłkarza</h4>
+            </div>
+            <div class="card-body">
+
+                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                <form th:action="@{/admin/uzytkownicy/nowy}" th:object="${userDto}" method="post">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Rola w systemie:</label>
+                            <select class="form-select" th:field="*{roleName}"
+                                    th:classappend="${#fields.hasErrors('roleName')} ? 'is-invalid'">
+                                <option value="" disabled selected>-- Wybierz rolę --</option>
+                                <option value="Trener">Trener</option>
+                                <option value="Sedzia">Sędzia</option>
+                                <option value="Pilkarz">Piłkarz</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{roleName}">Błąd roli</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="col-md-6">
+                            <label class="form-label">Login</label>
+                            <input type="text" class="form-control" th:field="*{login}"
+                                   th:classappend="${#fields.hasErrors('login')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{login}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Hasło</label>
+                            <input type="password" class="form-control" th:field="*{password}"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{password}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Imię</label>
+                            <input type="text" class="form-control" th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{name}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Nazwisko</label>
+                            <input type="text" class="form-control" th:field="*{surname}"
+                                   th:classappend="${#fields.hasErrors('surname')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{surname}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Data Urodzenia</label>
+                            <input type="date" class="form-control" th:field="*{birthDate}"
+                                   th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{birthDate}">Błąd</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Narodowość</label>
+                            <input type="text" class="form-control" th:field="*{nationality}"
+                                   th:classappend="${#fields.hasErrors('nationality')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{nationality}">Błąd</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Adres zamieszkania</label>
+                            <input type="text" class="form-control" th:field="*{address}"
+                                   th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{address}">Błąd</div>
+                        </div>
+
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4">Zarejestruj użytkownika</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

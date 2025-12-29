@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PlayerViewRepository extends JpaRepository<PlayerView, Integer> {
     // findAll() masz za darmo
-    List<PlayerView> findByDruzynaID(Integer druzynaId);
+    List<PlayerView> findByTeamId(Integer teamId);
 }

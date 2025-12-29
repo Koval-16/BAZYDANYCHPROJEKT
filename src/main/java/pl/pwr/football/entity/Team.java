@@ -2,6 +2,7 @@ package pl.pwr.football.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -14,25 +15,31 @@ public class Team {
     @Column(name = "DruzynaID")
     private Integer id;
 
-    @Getter
+    @Setter
     @Column(name = "DruzynaNazwa")
     private String name;
 
+    @Setter
     @Column(name = "DruzynaSkrot")
     private String abbreviation;
 
+    @Setter
     @Column(name = "DruzynaDataZalozenia")
-    private LocalDate foundation_date;
+    private LocalDate foundationDate;
 
+    @Setter
     @Column(name = "DruzynaStrojeDom")
-    private String kits_home;
+    private String kitsHome;
 
+    @Setter
     @Column(name = "DruzynaStrojeWyjazd")
-    private String kits_away;
+    private String kitsAway;
 
+    @Setter
     @Column(name = "DruzynaStadion")
     private String stadium;
 
+    @Setter
     @Column(name = "DruzynaAdres")
     private String address;
 
@@ -42,9 +49,37 @@ public class Team {
     public Integer getId() { return id; }
     public String getName() { return name; }
     public String getAbbreviation() { return abbreviation; }
-    public LocalDate getFoundationDate() { return foundation_date; }
-    public String getKitsHome() { return kits_home; }
-    public String getKitsAway() { return kits_away; }
+    public LocalDate getFoundationDate() { return foundationDate; }
+    public String getKitsHome() { return kitsHome; }
+    public String getKitsAway() { return kitsAway; }
     public String getStadium() { return stadium; }
     public String getAddress() { return address; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setFoundationDate(LocalDate foundationDate) {
+        this.foundationDate = foundationDate;
+    }
+
+    public void setKitsAway(String kitsAway) {
+        this.kitsAway = kitsAway;
+    }
+
+    public void setKitsHome(String kitsHome) {
+        this.kitsHome = kitsHome;
+    }
+
+    public void setStadium(String stadium) {
+        this.stadium = stadium;
+    }
 }

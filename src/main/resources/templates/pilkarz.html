@@ -25,9 +25,9 @@
         <h5 class="alert-heading">Twój ostatni mecz:</h5>
         <hr>
         <p class="mb-0">
-            <strong th:text="${ostatniMecz.gospodarzNazwa}">Gospodarz</strong>
-            <span class="badge bg-dark mx-2" th:text="${ostatniMecz.wynikGospodarz} + ' : ' + ${ostatniMecz.wynikGosc}">2:1</span>
-            <strong th:text="${ostatniMecz.goscNazwa}">Gość</strong>
+            <strong th:text="${ostatniMecz.hostName}">Gospodarz</strong>
+            <span class="badge bg-dark mx-2" th:text="${ostatniMecz.hostResult} + ' : ' + ${ostatniMecz.awayResult}">2:1</span>
+            <strong th:text="${ostatniMecz.awayName}">Gość</strong>
         </p>
     </div>
 

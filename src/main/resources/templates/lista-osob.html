@@ -28,18 +28,18 @@
             <tbody>
             <tr th:each="osoba : ${osoby}">
                 <td class="fw-bold">
-                    <span th:text="${osoba.imie}"></span> <span th:text="${osoba.nazwisko}"></span>
+                    <span th:text="${osoba.name}"></span> <span th:text="${osoba.surname}"></span>
                 </td>
 
-                <td th:text="${osoba.narodowosc}">PL</td>
+                <td th:text="${osoba.nationality}">PL</td>
 
-                <td th:if="${typ == 'PILKARZ'}" th:text="${osoba.wiek}">22</td>
+                <td th:if="${typ == 'PILKARZ'}" th:text="${osoba.age}">22</td>
                 <td th:if="${typ == 'PILKARZ'}">
-                    <span th:if="${osoba.druzynaNazwa != null}" th:text="${osoba.druzynaNazwa}" class="badge bg-success">Klub</span>
-                    <span th:unless="${osoba.druzynaNazwa != null}" class="badge bg-secondary">Szuka Klubu</span>
+                    <span th:if="${osoba.teamName != null}" th:text="${osoba.teamName}" class="badge bg-success">Klub</span>
+                    <span th:unless="${osoba.teamName != null}" class="badge bg-secondary">Szuka Klubu</span>
                 </td>
 
-                <td th:if="${typ == 'SEDZIA'}" th:text="${osoba.liczbaMeczy}">5</td>
+                <td th:if="${typ == 'SEDZIA'}" th:text="${osoba.matchCount}">5</td>
             </tr>
             </tbody>
         </table>

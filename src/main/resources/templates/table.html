@@ -38,26 +38,26 @@
 
                 <td class="fw-bold" th:text="${stat.count}">1</td>
 
-                <td class="text-start fw-bold" th:text="${row.druzyna}">Nazwa Klubu</td>
+                <td class="text-start fw-bold" th:text="${row.team}">Nazwa Klubu</td>
 
-                <td th:text="${row.mecze_zagrane}">10</td>
-                <td th:text="${row.wygrane}">5</td>
-                <td th:text="${row.remisy}">3</td>
-                <td th:text="${row.porazki}">2</td>
+                <td th:text="${row.matchesPlayed}">10</td>
+                <td th:text="${row.wins}">5</td>
+                <td th:text="${row.draws}">3</td>
+                <td th:text="${row.defeats}">2</td>
 
                 <td>
-                    <span th:text="${row.gole_zdobyte}">15</span> :
-                    <span th:text="${row.gole_stracone}">10</span>
+                    <span th:text="${row.goalsScored}">15</span> :
+                    <span th:text="${row.goalsConceded}">10</span>
                 </td>
 
                 <td>
-                            <span th:text="${row.gole_roznica}"
-                                  th:class="${row.gole_roznica > 0} ? 'text-success fw-bold' : (${row.gole_roznica < 0} ? 'text-danger' : 'text-muted')">
+                            <span th:text="${row.goalDifference}"
+                                  th:class="${row.goalDifference > 0} ? 'text-success fw-bold' : (${row.goalDifference < 0} ? 'text-danger' : 'text-muted')">
                                 +5
                             </span>
                 </td>
 
-                <td class="points-col h5 mb-0" th:text="${row.punkty}">18</td>
+                <td class="points-col h5 mb-0" th:text="${row.points}">18</td>
             </tr>
 
             <tr th:if="${#lists.isEmpty(table)}">

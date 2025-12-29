@@ -14,51 +14,51 @@ public class MatchView {
     private Integer id;
 
     @Column(name = "WidokMeczyLigaSezonID")
-    private Integer ligaSezonId;
+    private Integer leagueSeasonId;
 
     @Column(name = "WidokMeczyData")
-    private LocalDate data;
+    private LocalDate date;
 
     @Column(name = "WidokMeczyCzyZagrany")
-    private Boolean czyZagrany;
+    private Boolean isPlayed;
 
     @Column(name = "WidokMeczyGospodarzNazwa")
-    private String gospodarzNazwa;
+    private String hostName;
 
     @Column(name = "WidokMeczyGospodarzID")
-    private Integer gospodarzId;
+    private Integer hostId;
 
     @Column(name = "WidokMeczyWynikGospodarz")
-    private Integer wynikGospodarz;
+    private Integer hostResult;
 
     @Column(name = "WidokMeczyWynikGosc")
-    private Integer wynikGosc;
+    private Integer awayResult;
 
     @Column(name = "WidokMeczyGoscNazwa")
-    private String goscNazwa;
+    private String awayName;
 
     @Column(name = "WidokMeczyGoscID")
-    private Integer goscId;
+    private Integer awayId;
 
     @Column(name = "WidokMeczySedziaNazwa")
-    private String sedziaImieNazwisko;
+    private String refereeName;
 
     @Column(name = "WidokMeczySedziaID")
-    private Integer sedziaId;
+    private Integer refereeId;
 
     public MatchView() {}
 
-    // --- MANUAL GETTERS (Crucial for Thymeleaf) ---
     public Integer getId() { return id; }
-    public Integer getLigaSezonId() { return ligaSezonId; }
-    public LocalDate getData() { return data; } // This fixes your error!
-    public Boolean getCzyZagrany() { return czyZagrany; }
-    public String getGospodarzNazwa() { return gospodarzNazwa; }
-    public Integer getGospodarzId() { return gospodarzId; }
-    public Integer getWynikGospodarz() { return wynikGospodarz; }
-    public Integer getWynikGosc() { return wynikGosc; }
-    public String getGoscNazwa() { return goscNazwa; }
-    public Integer getGoscId() { return goscId; }
-    public String getSedziaImieNazwisko() { return sedziaImieNazwisko; }
-    public Integer getSedziaId() { return sedziaId; }
+    public Integer getLeagueSeasonId() { return leagueSeasonId; }
+    public LocalDate getDate() { return date; } // This fixes your error!
+    public Boolean getIsPlayed() { return isPlayed; }
+
+    public String getHostName() { return hostName; }
+    public Integer getHostId() { return hostId; }
+    public Integer getHostResult() { return hostResult; }
+    public Integer getAwayResult() { return awayResult; }
+    public String getAwayName() { return awayName; }
+    public Integer getAwayId() { return awayId; }
+    public String getRefereeName() { return refereeName; }
+    public Integer getRefereeId() { return refereeId; }
 }

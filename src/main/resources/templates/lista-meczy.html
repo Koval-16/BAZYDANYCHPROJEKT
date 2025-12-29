@@ -43,30 +43,30 @@
                 <tbody>
                 <tr th:each="mecz : ${mecze}">
 
-                    <td th:text="${mecz.data}">2025-05-12</td>
+                    <td th:text="${mecz.date}">2025-05-12</td>
 
-                    <td class="text-end fw-bold" th:text="${mecz.gospodarzNazwa}">Odra Opole</td>
+                    <td class="text-end fw-bold" th:text="${mecz.hostName}">Odra Opole</td>
 
                     <td class="text-center">
-                            <span th:if="${mecz.czyZagrany}" class="badge bg-success fs-6">
-                                <span th:text="${mecz.wynikGospodarz}">2</span> : <span th:text="${mecz.wynikGosc}">1</span>
+                            <span th:if="${mecz.isPlayed}" class="badge bg-success fs-6">
+                                <span th:text="${mecz.hostResult}">2</span> : <span th:text="${mecz.awayResult}">1</span>
                             </span>
 
-                        <span th:unless="${mecz.czyZagrany}" class="badge bg-secondary">
+                        <span th:unless="${mecz.isPlayed}" class="badge bg-secondary">
                                 vs
                             </span>
                     </td>
 
-                    <td class="fw-bold" th:text="${mecz.goscNazwa}">Śląsk Wrocław</td>
+                    <td class="fw-bold" th:text="${mecz.awayName}">Śląsk Wrocław</td>
 
                     <td class="text-muted small">
                         <i class="bi bi-whistle"></i>
-                        <span th:text="${mecz.sedziaImieNazwisko != null} ? ${mecz.sedziaImieNazwisko} : 'Brak obsady'"></span>
+                        <span th:text="${mecz.refereeName != null} ? ${mecz.refereeName} : 'Brak obsady'"></span>
                     </td>
 
                     <td>
-                        <span th:if="${mecz.czyZagrany}" class="text-success small fw-bold">Zakończony</span>
-                        <span th:unless="${mecz.czyZagrany}" class="text-secondary small">Zaplanowany</span>
+                        <span th:if="${mecz.isPlayed}" class="text-success small fw-bold">Zakończony</span>
+                        <span th:unless="${mecz.isPlayed}" class="text-secondary small">Zaplanowany</span>
                     </td>
                 </tr>
 

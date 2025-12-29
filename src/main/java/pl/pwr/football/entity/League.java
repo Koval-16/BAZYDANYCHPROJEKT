@@ -10,18 +10,18 @@ public class League {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LigaID")
-    private Integer ligaID;
+    private Integer leagueID;
 
     @Column(name = "LigaNazwa")
-    private String ligaNazwa;
+    private String leagueName;
 
     @Column(name = "LigaSkrot")
-    private String LigaSkrot;
+    private String leagueAbbreviation;
 
     public League(){
     }
 
-    public Integer getLigaID() {return ligaID;}
-    public String getLigaNazwa() {return ligaNazwa;}
-    public String getLigaSkrot() {return LigaSkrot;}
+    public Integer getLeagueID() {return leagueID;}
+    public String getLeagueName() {return leagueName;}
+    public String getLeagueAbbreviation() {return leagueAbbreviation;}
 }

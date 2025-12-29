@@ -48,9 +48,9 @@
             <tbody>
             <tr th:each="player : ${squad}">
                 <td class="fw-bold">
-                    <span th:text="${player.imie}"></span> <span th:text="${player.nazwisko}"></span>
+                    <span th:text="${player.name}"></span> <span th:text="${player.surname}"></span>
                 </td>
-                <td th:text="${player.narodowosc}">PL</td>
+                <td th:text="${player.nationality}">PL</td>
                 <td th:text="${player.wiek}">25</td> <td>
                 <a href="#" class="btn btn-sm btn-outline-primary">Profil</a>
             </td>
@@ -76,15 +76,15 @@
             <ul class="list-group list-group-flush">
                 <li th:each="mecz : ${lastMatches}" class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted" th:text="${mecz.data}">Data</small>
+                        <small class="text-muted" th:text="${mecz.date}">Data</small>
                         <span class="badge bg-dark">
-                            <span th:text="${mecz.wynikGospodarz}">2</span> : <span th:text="${mecz.wynikGosc}">1</span>
+                            <span th:text="${mecz.hostResult}">2</span> : <span th:text="${mecz.awayResult}">1</span>
                         </span>
                     </div>
                     <div class="text-center mt-1">
-                        <span th:text="${mecz.gospodarzNazwa}" th:class="${mecz.gospodarzId == team.id} ? 'fw-bold text-primary' : ''">Gospodarz</span>
+                        <span th:text="${mecz.hostName}" th:class="${mecz.hostId == team.id} ? 'fw-bold text-primary' : ''">Gospodarz</span>
                         <small class="text-muted">vs</small>
-                        <span th:text="${mecz.goscNazwa}" th:class="${mecz.goscId == team.id} ? 'fw-bold text-primary' : ''">Gość</span>
+                        <span th:text="${mecz.awayName}" th:class="${mecz.awayId == team.id} ? 'fw-bold text-primary' : ''">Gość</span>
                     </div>
                 </li>
 
@@ -103,13 +103,13 @@
             <ul class="list-group list-group-flush">
                 <li th:each="mecz : ${nextMatches}" class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <small class="text-muted" th:text="${mecz.data}">Data</small>
+                        <small class="text-muted" th:text="${mecz.date}">Data</small>
                         <span class="badge bg-light text-dark border">- : -</span>
                     </div>
                     <div class="text-center">
-                        <span th:text="${mecz.gospodarzNazwa}" th:class="${mecz.gospodarzId == team.id} ? 'fw-bold text-primary' : ''">Gospodarz</span>
+                        <span th:text="${mecz.hostName}" th:class="${mecz.hostId == team.id} ? 'fw-bold text-primary' : ''">Gospodarz</span>
                         <small class="text-muted">vs</small>
-                        <span th:text="${mecz.goscNazwa}" th:class="${mecz.goscId == team.id} ? 'fw-bold text-primary' : ''">Gość</span>
+                        <span th:text="${mecz.awayName}" th:class="${mecz.awayId == team.id} ? 'fw-bold text-primary' : ''">Gość</span>
                     </div>
                 </li>
 

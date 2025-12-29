@@ -11,7 +11,7 @@
 <div class="card shadow">
     <div class="card-header bg-dark text-white">
         <h3 class="mb-0" th:if="${!#lists.isEmpty(ls)}"
-            th:text="'Rozgrywki w sezonie: ' + ${ls[0].sezonRok}">Sezon</h3>
+            th:text="'Rozgrywki w sezonie: ' + ${ls[0].seasonYear}">Sezon</h3>
         <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Brak danych</h3>
     </div>
 
@@ -29,22 +29,22 @@
             <tbody>
             <tr th:each="item : ${ls}">
 
-                <td class="fw-bold" th:text="${item.ligaNazwa}">Ekstraklasa</td>
+                <td class="fw-bold" th:text="${item.leagueName}">Ekstraklasa</td>
 
                 <td>
-                    <span class="badge bg-light text-dark border" th:text="${item.ligaSkrot}">EKS</span>
+                    <span class="badge bg-light text-dark border" th:text="${item.leagueAbbreviation}">EKS</span>
                 </td>
 
                 <td>
                     <small class="text-muted">
-                        <span th:text="${item.sezonDataPoczatku}"></span> -
-                        <span th:text="${item.sezonDataKonca}"></span>
+                        <span th:text="${item.seasonDateStart}"></span> -
+                        <span th:text="${item.seasonDateEnd}"></span>
                     </small>
                 </td>
 
                 <td>
-                    <span th:if="${item.sezonCzyAktywny}" class="badge bg-success">Aktywna</span>
-                    <span th:unless="${item.sezonCzyAktywny}" class="badge bg-secondary">Zakończona</span>
+                    <span th:if="${item.seasonIsActive}" class="badge bg-success">Aktywna</span>
+                    <span th:unless="${item.seasonIsActive}" class="badge bg-secondary">Zakończona</span>
                 </td>
 
                 <td class="text-end">
