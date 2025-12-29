@@ -18,9 +18,9 @@ public class TableService {
 
     public List<TableView> get_table(Integer id){
 
-        Sort sorting = Sort.by(Sort.Direction.DESC, "punkty")
-                .and(Sort.by(Sort.Direction.DESC, "goleRoznica"))
-                .and(Sort.by(Sort.Direction.DESC, "goleZdobyte"));
+        Sort sorting = Sort.by(Sort.Direction.DESC, "points")
+                .and(Sort.by(Sort.Direction.DESC, "goalDifference"))
+                .and(Sort.by(Sort.Direction.DESC, "goalsScored"));
 
         return tableViewRepository.findByLeagueSeasonId(id,sorting);
     }

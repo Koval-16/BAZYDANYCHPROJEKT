@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <head>
     <title>Lista Lig</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -8,10 +8,37 @@
 
 <a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć do Menu</a>
 
-<div class="card shadow">
-    <div class="card-header bg-primary text-white">
-        <h3 class="mb-0">🏆 Dostępne Ligi</h3>
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+<div class="card shadow mb-4 border-success" sec:authorize="hasRole('Administrator')">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">➕ Utwórz nową ligę</h5>
     </div>
+    <div class="card-body">
+        <form th:action="@{/admin/ligi/nowa}" th:object="${newLeague}" method="post" class="row g-3 align-items-end">
+
+            <div class="col-md-5">
+                <label class="form-label">Nazwa Ligi</label>
+                <input type="text" class="form-control" th:field="*{name}" placeholder="np. Premier League">
+                <div class="text-danger small" th:errors="*{name}">Błąd nazwy</div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Skrót</label>
+                <input type="text" class="form-control" th:field="*{abbreviation}" placeholder="np. ENG">
+                <div class="text-danger small" th:errors="*{abbreviation}">Błąd skrótu</div>
+            </div>
+
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success w-100">Zapisz Ligę</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow"> <div class="card-header bg-primary text-white">
+    <h3 class="mb-0">🏆 Dostępne Ligi</h3>
+</div>
     <div class="card-body p-0">
         <table class="table table-striped table-hover mb-0 align-middle">
             <thead class="table-light">
@@ -24,17 +51,17 @@
             <tbody>
             <tr th:each="league : ${leagues}">
                 <td class="fw-bold">
-                    <a th:href="@{/ligi/{liga}(liga=${league.getLeagueID()})}"
+                    <a th:href="@{/ligi/{liga}(liga=${league.leagueID})}"
                        class="text-decoration-none text-dark"
-                       th:text="${league.getLeagueName()}">Ekstraklasa</a>
+                       th:text="${league.leagueName}">Ekstraklasa</a>
                 </td>
 
                 <td>
-                    <span class="badge bg-light text-dark border" th:text="${league.getLeagueAbbreviation()}">EKS</span>
+                    <span class="badge bg-light text-dark border" th:text="${league.leagueAbbreviation}">EKS</span>
                 </td>
 
                 <td class="text-end">
-                    <a th:href="@{/ligi/{liga}(liga=${league.getLeagueID()})}" class="btn btn-sm btn-outline-primary">
+                    <a th:href="@{/ligi/{liga}(liga=${league.leagueID})}" class="btn btn-sm btn-outline-primary">
                         Zobacz historię &rarr;
                     </a>
                 </td>

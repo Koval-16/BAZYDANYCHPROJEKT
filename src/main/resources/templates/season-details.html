@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Szczegóły Sezonu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -8,11 +9,38 @@
 
 <a href="/sezony" class="btn btn-outline-secondary mb-3">&larr; Wróć do listy sezonów</a>
 
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+<div class="card shadow mb-4 border-primary"
+     sec:authorize="hasRole('Administrator')"
+     th:if="${season.seasonIsActive}">
+
+    <div class="card-body d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 text-primary">➕ Dodaj ligę do tego sezonu</h5>
+
+        <form th:action="@{/admin/sezony/{id}/dodaj-lige(id=${currentSeasonId})}"
+              th:object="${addLeagueDto}" method="post" class="d-flex gap-2">
+
+            <select class="form-select" th:field="*{leagueId}" style="width: 300px;" required>
+                <option value="" disabled selected>-- Wybierz ligę --</option>
+                <option th:each="league : ${allLeagues}"
+                        th:value="${league.leagueID}"
+                        th:text="${league.leagueName} + ' (' + ${league.leagueAbbreviation} + ')'">
+                    Ekstraklasa (EKS)
+                </option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </form>
+    </div>
+</div>
+
 <div class="card shadow">
     <div class="card-header bg-dark text-white">
         <h3 class="mb-0" th:if="${!#lists.isEmpty(ls)}"
             th:text="'Rozgrywki w sezonie: ' + ${ls[0].seasonYear}">Sezon</h3>
-        <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Brak danych</h3>
+        <h3 class="mb-0" th:if="${#lists.isEmpty(ls)}">Sezon (Brak dodanych lig)</h3>
     </div>
 
     <div class="card-body p-0">
@@ -28,35 +56,27 @@
             </thead>
             <tbody>
             <tr th:each="item : ${ls}">
-
                 <td class="fw-bold" th:text="${item.leagueName}">Ekstraklasa</td>
-
-                <td>
-                    <span class="badge bg-light text-dark border" th:text="${item.leagueAbbreviation}">EKS</span>
-                </td>
-
+                <td><span class="badge bg-light text-dark border" th:text="${item.leagueAbbreviation}">EKS</span></td>
                 <td>
                     <small class="text-muted">
                         <span th:text="${item.seasonDateStart}"></span> -
                         <span th:text="${item.seasonDateEnd}"></span>
                     </small>
                 </td>
-
                 <td>
                     <span th:if="${item.seasonIsActive}" class="badge bg-success">Aktywna</span>
                     <span th:unless="${item.seasonIsActive}" class="badge bg-secondary">Zakończona</span>
                 </td>
-
                 <td class="text-end">
                     <a th:href="@{/rozgrywki/{id}(id=${item.id})}" class="btn btn-sm btn-outline-dark">
                         Tabela / Mecze
                     </a>
                 </td>
             </tr>
-
             <tr th:if="${#lists.isEmpty(ls)}">
                 <td colspan="5" class="text-center py-4 text-muted">
-                    Brak lig przypisanych do tego sezonu.
+                    Brak lig przypisanych do tego sezonu. Użyj panelu powyżej, aby dodać.
                 </td>
             </tr>
             </tbody>

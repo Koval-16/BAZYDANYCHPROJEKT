@@ -43,7 +43,7 @@ public class PlayerView {
     public String getTeamName() { return teamName; }
     public Integer getTeamId() {return teamId;}
 
-    public int getWiek() {
+    public int getAge() {
         if (birthDate == null) return 0;
         return Period.between(birthDate, LocalDate.now()).getYears();
     }

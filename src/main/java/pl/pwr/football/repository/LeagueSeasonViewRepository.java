@@ -10,4 +10,6 @@ public interface LeagueSeasonViewRepository extends JpaRepository<LeagueSeasonVi
     List<LeagueSeasonView> findByLeagueId(Integer leagueId);
     List<LeagueSeasonView> findBySeasonId(Integer seasonId);
 
+
+
 }

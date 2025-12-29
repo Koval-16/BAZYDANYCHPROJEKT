@@ -1,12 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <head>
     <title>Lista Sezonów</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light container mt-5">
 
 <a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć do Menu</a>
+
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+<div th:if="${errorMessageRedirect}" class="alert alert-danger" th:text="${errorMessageRedirect}"></div>
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+
+<div class="card shadow mb-4 border-success" sec:authorize="hasRole('Administrator')">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">🔧 Panel Administratora: Rozpocznij Nowy Sezon</h5>
+    </div>
+    <div class="card-body">
+        <form th:action="@{/admin/sezony/nowy}" th:object="${newSeason}" method="post" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Rok (np. 2025)</label>
+                <input type="number" class="form-control" th:field="*{year}">
+                <div class="text-danger small" th:errors="*{year}"></div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Początek</label>
+                <input type="date" class="form-control" th:field="*{startDate}">
+                <div class="text-danger small" th:errors="*{startDate}"></div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Koniec</label>
+                <input type="date" class="form-control" th:field="*{endDate}">
+                <div class="text-danger small" th:errors="*{endDate}"></div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success w-100">Utwórz Sezon</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <div class="card shadow">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
@@ -16,7 +50,7 @@
         <table class="table table-striped table-hover mb-0 align-middle">
             <thead class="table-light">
             <tr>
-                <th>Rok / Nazwa</th>
+                <th>Rok</th>
                 <th>Początek</th>
                 <th>Koniec</th>
                 <th>Status</th>
@@ -26,23 +60,35 @@
             <tbody>
             <tr th:each="season : ${seasons}">
                 <td class="fw-bold">
-                    <a th:href="@{/sezony/{sez}(sez=${season.getSezonID})}"
+                    <a th:href="@{/sezony/{id}(id=${season.seasonId})}"
                        class="text-decoration-none text-dark"
-                       th:text="${season.getSeasonYear()}">2024/2025</a>
+                       th:text="${season.seasonYear}">2024</a>
                 </td>
 
-                <td th:text="${season.getSeasonStartDate()}">2024-08-01</td>
-                <td th:text="${season.getSeasonEndDate()}">2025-06-01</td>
+                <td th:text="${season.seasonStartDate}">2024-08-01</td>
+                <td th:text="${season.seasonEndDate}">2025-06-01</td>
 
                 <td>
-                    <span th:if="${season.getSeasonIsActive()}" class="badge bg-success">Trwa</span>
-                    <span th:unless="${season.getSeasonIsActive()}" class="badge bg-secondary">Zakończony</span>
+                    <span th:if="${season.seasonIsActive}" class="badge bg-success">Trwa</span>
+                    <span th:unless="${season.seasonIsActive}" class="badge bg-secondary">Zakończony</span>
                 </td>
 
                 <td class="text-end">
-                    <a th:href="@{/sezony/{sez}(sez=${season.getSeasonId()})}" class="btn btn-sm btn-outline-primary">
-                        Wybierz &rarr;
-                    </a>
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a th:href="@{/sezony/{id}(id=${season.seasonId})}" class="btn btn-sm btn-outline-primary">
+                            Wybierz &rarr;
+                        </a>
+
+                        <form sec:authorize="hasRole('Administrator')"
+                              th:if="${season.seasonIsActive}"
+                              th:action="@{/admin/sezony/{id}/archiwizuj(id=${season.seasonId})}"
+                              method="post"
+                              onsubmit="return confirm('Czy na pewno zakończyć ten sezon? Tej operacji nie można cofnąć.');">
+                            <button type="submit" class="btn btn-sm btn-danger">Zakończ 🔒</button>
+                        </form>
+
+                    </div>
                 </td>
             </tr>
 

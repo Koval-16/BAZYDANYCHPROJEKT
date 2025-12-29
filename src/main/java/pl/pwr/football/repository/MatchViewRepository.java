@@ -21,4 +21,6 @@ public interface MatchViewRepository extends JpaRepository<MatchView, Integer> {
     @Query("SELECT m FROM MatchView m WHERE (m.hostId = :teamId OR m.awayId = :teamId) AND m.isPlayed = false ORDER BY m.date ASC")
     List<MatchView> findNextMatches(@Param("teamId") Integer teamId, Pageable pageable);
 
+    @Query("SELECT COUNT(m) FROM MatchView m, LeagueSeasonView ls WHERE m.leagueSeasonId = ls.id AND ls.seasonId = :seasonId AND m.isPlayed = false")
+    Integer countUnfinishedMatches(@Param("seasonId") Integer seasonId);
 }

@@ -35,4 +35,24 @@ public class Season {
     public LocalDate getSeasonStartDate() {return seasonStartDate;}
     public LocalDate getSeasonEndDate() {return seasonEndDate;}
     public boolean getSeasonIsActive() {return seasonIsActive;}
+
+    public void setSeasonEndDate(LocalDate seasonEndDate) {
+        this.seasonEndDate = seasonEndDate;
+    }
+
+    public void setSeasonId(Integer seasonId) {
+        this.seasonId = seasonId;
+    }
+
+    public void setSeasonIsActive(boolean seasonIsActive) {
+        this.seasonIsActive = seasonIsActive;
+    }
+
+    public void setSeasonStartDate(LocalDate seasonStartDate) {
+        this.seasonStartDate = seasonStartDate;
+    }
+
+    public void setSeasonYear(Integer seasonYear) {
+        this.seasonYear = seasonYear;
+    }
 }

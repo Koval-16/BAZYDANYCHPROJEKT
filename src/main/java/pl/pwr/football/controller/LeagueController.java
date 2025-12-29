@@ -1,9 +1,15 @@
 package pl.pwr.football.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import pl.pwr.football.dto.LeagueCreateDto;
 import pl.pwr.football.service.LeagueSeasonViewService;
 import pl.pwr.football.service.LeagueService;
 
@@ -22,6 +28,9 @@ public class LeagueController {
     public String get_all_seasons(Model model) {
         var leagues = leagueService.get_all_leagues();
         model.addAttribute("leagues", leagues);
+        if (!model.containsAttribute("newLeague")) {
+            model.addAttribute("newLeague", new LeagueCreateDto());
+        }
         return "leagues";
     }
 
@@ -32,5 +41,26 @@ public class LeagueController {
         return "league-details";
     }
 
+    @PreAuthorize("hasRole('Administrator')")
+    @PostMapping("/admin/ligi/nowa")
+    public String createLeague(@Valid @ModelAttribute("newLeague") LeagueCreateDto leagueDto,
+                               BindingResult bindingResult,
+                               Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("leagues", leagueService.get_all_leagues());
+            return "leagues";
+        }
+
+        try {
+            leagueService.createLeague(leagueDto);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("leagues", leagueService.get_all_leagues());
+            return "leagues";
+        }
+
+        return "redirect:/ligi";
+    }
 
 }

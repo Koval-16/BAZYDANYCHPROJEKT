@@ -24,4 +24,16 @@ public class League {
     public Integer getLeagueID() {return leagueID;}
     public String getLeagueName() {return leagueName;}
     public String getLeagueAbbreviation() {return leagueAbbreviation;}
+
+    public void setLeagueAbbreviation(String leagueAbbreviation) {
+        this.leagueAbbreviation = leagueAbbreviation;
+    }
+
+    public void setLeagueID(Integer leagueID) {
+        this.leagueID = leagueID;
+    }
+
+    public void setLeagueName(String leagueName) {
+        this.leagueName = leagueName;
+    }
 }

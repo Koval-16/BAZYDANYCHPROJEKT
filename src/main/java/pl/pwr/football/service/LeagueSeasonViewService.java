@@ -23,4 +23,7 @@ public class LeagueSeasonViewService {
         return leagueSeasonViewRepository.findBySeasonId(sezonID);
     }
 
+    public LeagueSeasonView findById(Integer id) {
+        return leagueSeasonViewRepository.findById(id).orElse(null);
+    }
 }
