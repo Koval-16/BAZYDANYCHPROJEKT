@@ -2,10 +2,12 @@ package pl.pwr.football.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.pwr.football.entity.Match;
-import pl.pwr.football.entity.TeamInLeague;
-import pl.pwr.football.repository.MatchRepository;
-import pl.pwr.football.repository.TeamInLeagueRepository;
+import pl.pwr.football.entity.entities.Match;
+import pl.pwr.football.entity.entities.TeamInLeague;
+import pl.pwr.football.entity.views.LeagueSeasonView;
+import pl.pwr.football.repository.entities.MatchRepository;
+import pl.pwr.football.repository.entities.TeamInLeagueRepository;
+import pl.pwr.football.repository.views.LeagueSeasonViewRepository;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -18,12 +20,15 @@ public class MatchScheduleService {
 
     private final MatchRepository matchRepository;
     private final TeamInLeagueRepository teamInLeagueRepository;
-    private final LeagueSeasonViewService leagueSeasonViewService;
+    // Zamiast usuniętego serwisu, używamy repozytorium widoku bezpośrednio
+    private final LeagueSeasonViewRepository leagueSeasonViewRepository;
 
-    public MatchScheduleService(MatchRepository matchRepository, TeamInLeagueRepository teamInLeagueRepository, LeagueSeasonViewService leagueSeasonViewService) {
+    public MatchScheduleService(MatchRepository matchRepository,
+                           TeamInLeagueRepository teamInLeagueRepository,
+                           LeagueSeasonViewRepository leagueSeasonViewRepository) {
         this.matchRepository = matchRepository;
         this.teamInLeagueRepository = teamInLeagueRepository;
-        this.leagueSeasonViewService = leagueSeasonViewService;
+        this.leagueSeasonViewRepository = leagueSeasonViewRepository;
     }
 
     public boolean hasSchedule(Integer leagueSeasonId) {
@@ -42,8 +47,10 @@ public class MatchScheduleService {
             throw new IllegalStateException("Za mało drużyn (min. 2).");
         }
 
-        // 2. Pobierz daty z widoku
-        var view = leagueSeasonViewService.findById(leagueSeasonId);
+        // 2. Pobierz daty z widoku (korzystając z repozytorium)
+        LeagueSeasonView view = leagueSeasonViewRepository.findById(leagueSeasonId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono sezonu ligowego: " + leagueSeasonId));
+
         LocalDate startDate = view.getSeasonDateStart();
         LocalDate endDate = view.getSeasonDateEnd();
 

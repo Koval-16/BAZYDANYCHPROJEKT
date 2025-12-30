@@ -2,8 +2,8 @@ package pl.pwr.football.service;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import pl.pwr.football.entity.MatchView;
-import pl.pwr.football.repository.MatchViewRepository;
+import pl.pwr.football.entity.views.MatchView;
+import pl.pwr.football.repository.views.MatchViewRepository;
 
 import java.util.List;
 
@@ -16,18 +16,21 @@ public class MatchService {
         this.matchViewRepository = matchViewRepository;
     }
 
-    public List<MatchView> get_all_matches() {
+    public List<MatchView> getAllMatches() {
         return matchViewRepository.findAll();
     }
 
-    public List<MatchView> get_matches_by_league(Integer ligaSezonId) {
-        return matchViewRepository.findByLeagueSeasonId(ligaSezonId);
+    public List<MatchView> getMatchesByLeague(Integer leagueSeasonId) {
+        return matchViewRepository.findByLeagueSeasonId(leagueSeasonId);
     }
 
-    public List<MatchView> get_matches_by_team(Integer gospodarzId, Integer goscId){
-        return matchViewRepository.findByHostIdOrAwayId(gospodarzId, goscId);
+    // Pobiera mecze gdzie dana drużyna jest gospodarzem LUB gościem
+    // (W kontrolerze przekażesz to samo ID jako oba parametry)
+    public List<MatchView> getMatchesByTeam(Integer hostId, Integer awayId){
+        return matchViewRepository.findByHostIdOrAwayId(hostId, awayId);
     }
 
+    // A) 5 Ostatnich Meczów
     public List<MatchView> getLast5Matches(Integer teamId) {
         return matchViewRepository.findLastMatches(teamId, PageRequest.of(0, 5));
     }
@@ -36,6 +39,4 @@ public class MatchService {
     public List<MatchView> getNext5Matches(Integer teamId) {
         return matchViewRepository.findNextMatches(teamId, PageRequest.of(0, 5));
     }
-
-
 }

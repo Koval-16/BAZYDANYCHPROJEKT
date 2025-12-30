@@ -1,22 +1,21 @@
 package pl.pwr.football.service;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.pwr.football.dto.UserRegisterDto;
-import pl.pwr.football.entity.Role;
-import pl.pwr.football.entity.User;
-import pl.pwr.football.repository.RoleRepository;
-import pl.pwr.football.repository.UserRepository;
+import pl.pwr.football.entity.entities.Role;
+import pl.pwr.football.entity.entities.User;
+import pl.pwr.football.repository.entities.RoleRepository;
+import pl.pwr.football.repository.entities.UserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder; // Do kodowania haseł
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -39,7 +38,7 @@ public class UserService {
         user.setRole(role);
         user.setLogin(dto.getLogin());
 
-        // WAŻNE: Kodujemy hasło!
+        // Kodowanie hasła
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         user.setName(dto.getName());
@@ -47,10 +46,13 @@ public class UserService {
         user.setBirthDate(dto.getBirthDate());
         user.setNationality(dto.getNationality());
         user.setAddress(dto.getAddress());
-        user.setLookingForClub(false);
+        user.setLookingForClub(false); // Domyślnie false
 
         userRepository.save(user);
     }
 
-
+    public List<User> getFreeCoaches(){
+        // Metoda korzysta z UserRepository.findAllByRole_Name
+        return userRepository.findAllByRole_Name("Trener");
+    }
 }

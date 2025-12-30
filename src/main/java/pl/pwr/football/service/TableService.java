@@ -2,8 +2,8 @@ package pl.pwr.football.service;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import pl.pwr.football.entity.TableView;
-import pl.pwr.football.repository.TableViewRepository;
+import pl.pwr.football.entity.views.TableView;
+import pl.pwr.football.repository.views.TableViewRepository;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ public class TableService {
         this.tableViewRepository = tableViewRepository;
     }
 
-    public List<TableView> get_table(Integer id){
+    public List<TableView> getTable(Integer leagueSeasonId){
 
+        // Sortowanie: Punkty DESC -> Różnica Bramek DESC -> Bramki Zdobyte DESC
         Sort sorting = Sort.by(Sort.Direction.DESC, "points")
                 .and(Sort.by(Sort.Direction.DESC, "goalDifference"))
                 .and(Sort.by(Sort.Direction.DESC, "goalsScored"));
 
-        return tableViewRepository.findByLeagueSeasonId(id,sorting);
+        return tableViewRepository.findByLeagueSeasonId(leagueSeasonId, sorting);
     }
-
 }

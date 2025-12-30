@@ -60,29 +60,29 @@
             <tbody>
             <tr th:each="season : ${seasons}">
                 <td class="fw-bold">
-                    <a th:href="@{/sezony/{id}(id=${season.seasonId})}"
+                    <a th:href="@{/sezony/{id}(id=${season.id})}"
                        class="text-decoration-none text-dark"
-                       th:text="${season.seasonYear}">2024</a>
+                       th:text="${season.year}">2024</a>
                 </td>
 
-                <td th:text="${season.seasonStartDate}">2024-08-01</td>
-                <td th:text="${season.seasonEndDate}">2025-06-01</td>
+                <td th:text="${season.startDate}">2024-08-01</td>
+                <td th:text="${season.endDate}">2025-06-01</td>
 
                 <td>
-                    <span th:if="${season.seasonIsActive}" class="badge bg-success">Trwa</span>
-                    <span th:unless="${season.seasonIsActive}" class="badge bg-secondary">Zakończony</span>
+                    <span th:if="${season.active}" class="badge bg-success">Trwa</span>
+                    <span th:unless="${season.active}" class="badge bg-secondary">Zakończony</span>
                 </td>
 
                 <td class="text-end">
                     <div class="d-flex justify-content-end gap-2">
 
-                        <a th:href="@{/sezony/{id}(id=${season.seasonId})}" class="btn btn-sm btn-outline-primary">
+                        <a th:href="@{/sezony/{id}(id=${season.id})}" class="btn btn-sm btn-outline-primary">
                             Wybierz &rarr;
                         </a>
 
                         <form sec:authorize="hasRole('Administrator')"
-                              th:if="${season.seasonIsActive}"
-                              th:action="@{/admin/sezony/{id}/archiwizuj(id=${season.seasonId})}"
+                              th:if="${season.active}"
+                              th:action="@{/admin/sezony/{id}/archiwizuj(id=${season.id})}"
                               method="post"
                               onsubmit="return confirm('Czy na pewno zakończyć ten sezon? Tej operacji nie można cofnąć.');">
                             <button type="submit" class="btn btn-sm btn-danger">Zakończ 🔒</button>

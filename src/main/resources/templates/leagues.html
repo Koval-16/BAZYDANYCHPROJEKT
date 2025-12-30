@@ -51,17 +51,17 @@
             <tbody>
             <tr th:each="league : ${leagues}">
                 <td class="fw-bold">
-                    <a th:href="@{/ligi/{liga}(liga=${league.leagueID})}"
+                    <a th:href="@{/ligi/{liga}(liga=${league.id})}"
                        class="text-decoration-none text-dark"
-                       th:text="${league.leagueName}">Ekstraklasa</a>
+                       th:text="${league.name}">Ekstraklasa</a>
                 </td>
 
                 <td>
-                    <span class="badge bg-light text-dark border" th:text="${league.leagueAbbreviation}">EKS</span>
+                    <span class="badge bg-light text-dark border" th:text="${league.abbreviation}">EKS</span>
                 </td>
 
                 <td class="text-end">
-                    <a th:href="@{/ligi/{liga}(liga=${league.leagueID})}" class="btn btn-sm btn-outline-primary">
+                    <a th:href="@{/ligi/{liga}(liga=${league.id})}" class="btn btn-sm btn-outline-primary">
                         Zobacz historię &rarr;
                     </a>
                 </td>

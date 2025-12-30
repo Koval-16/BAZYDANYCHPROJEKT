@@ -83,12 +83,14 @@
                         <th>#</th>
                         <th>Nazwa Drużyny</th>
                         <th>Statystyki (M/Pkt)</th>
+                        <th>Trener</th>
                     </tr>
                     </thead>
                     <tbody>
+
                     <tr th:each="row, iter : ${currentTeams}">
                         <td th:text="${iter.count}">1</td>
-                        <td class="fw-bold" th:text="${row.team}">Real Madryt</td>
+                        <td class="fw-bold" th:text="${row.teamName}">Real Madryt</td>
                         <td>
                             <span class="badge bg-light text-dark border">
                                 M: <span th:text="${row.matchesPlayed}">0</span>
@@ -96,6 +98,23 @@
                             <span class="badge bg-warning text-dark border">
                                 Pkt: <span th:text="${row.points}">0</span>
                             </span>
+                        </td>
+                        <td>
+                            <form th:action="@{/admin/rozgrywki/{leagueId}/druzyny/{tilId}/trener(leagueId=${leagueSeason.id}, tilId=${row.id})}"
+                                  method="post" class="d-flex gap-2">
+
+                                <select name="coachId" class="form-select form-select-sm" required>
+                                    <option value="" selected>-- Wybierz --</option>
+                                    <option th:each="coach : ${allCoaches}"
+                                            th:value="${coach.id}"
+                                            th:text="${coach.name} + ' ' + ${coach.surname}">
+                                        Adam Nawałka
+                                    </option>
+                                </select>
+
+                                <button type="submit" class="btn btn-sm btn-outline-primary">OK</button>
+                            </form>
+
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(currentTeams)}">

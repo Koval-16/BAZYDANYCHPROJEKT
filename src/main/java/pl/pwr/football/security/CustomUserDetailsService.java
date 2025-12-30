@@ -4,8 +4,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.pwr.football.entity.User;
-import pl.pwr.football.repository.UserRepository;
+import pl.pwr.football.entity.entities.User;
+import pl.pwr.football.repository.entities.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collections;
 

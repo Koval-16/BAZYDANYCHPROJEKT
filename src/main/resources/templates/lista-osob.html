@@ -35,8 +35,21 @@
 
                 <td th:if="${typ == 'PILKARZ'}" th:text="${osoba.age}">22</td>
                 <td th:if="${typ == 'PILKARZ'}">
-                    <span th:if="${osoba.teamName != null}" th:text="${osoba.teamName}" class="badge bg-success">Klub</span>
-                    <span th:unless="${osoba.teamName != null}" class="badge bg-secondary">Szuka Klubu</span>
+    <span th:if="${osoba.hasActiveClub()}"
+          th:text="${osoba.teamName}"
+          class="badge bg-success">
+        Nazwa Klubu
+    </span>
+
+                    <span th:if="${!osoba.hasActiveClub() and osoba.isLookingForClub}"
+                          class="badge bg-warning text-dark border border-dark">
+        Szuka Klubu
+    </span>
+
+                    <span th:if="${!osoba.getIsSeasonActive() and !osoba.isLookingForClub}"
+                          class="badge bg-secondary">
+        Bez Klubu
+    </span>
                 </td>
 
                 <td th:if="${typ == 'SEDZIA'}" th:text="${osoba.matchCount}">5</td>
