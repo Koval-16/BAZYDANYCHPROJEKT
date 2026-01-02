@@ -151,18 +151,22 @@ JOIN (
 WHERE T.rn <= 8;
 
 
-INSERT INTO PrzynaleznosciPilkarzy (PilkarzID, DruzynaWLidzeID)
-SELECT P.UzytkownikID, D.DruzynaWLidzeID
+INSERT INTO PrzynaleznosciPilkarzy (PilkarzID, DruzynaWLidzeID, PilkarzPotwierdzony, PilkarzAktywny)
+SELECT
+    P.UzytkownikID,
+    D.DruzynaWLidzeID,
+    TRUE, -- Ustawiamy, że potwierdził
+    TRUE  -- Ustawiamy, że jest aktywny
 FROM (
-    SELECT UzytkownikID, ROW_NUMBER() OVER (ORDER BY UzytkownikID) as rn
-    FROM Uzytkownicy u
-    JOIN Role r ON u.RolaID = r.RolaID
-    WHERE r.RolaNazwa = 'Pilkarz'
-) P
-JOIN (
+         SELECT UzytkownikID, ROW_NUMBER() OVER (ORDER BY UzytkownikID) as rn
+         FROM Uzytkownicy u
+                  JOIN Role r ON u.RolaID = r.RolaID
+         WHERE r.RolaNazwa = 'Pilkarz'
+     ) P
+         JOIN (
     SELECT DruzynaWLidzeID, ROW_NUMBER() OVER (ORDER BY DruzynaWLidzeID) as rn
     FROM DruzynyWLidze
-) D ON D.rn = CEIL(P.rn / 7.0) 
+) D ON D.rn = CEIL(P.rn / 7.0)
 WHERE P.rn <= 56;
 
 

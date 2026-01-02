@@ -9,6 +9,7 @@ import pl.pwr.football.repository.entities.RoleRepository;
 import pl.pwr.football.repository.entities.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -51,8 +52,36 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<User> getFreePlayers() {
+        // Musisz upewnić się, że masz metodę w repozytorium:
+        // List<User> findAllByRole_NameAndLookingForClubTrue(String roleName);
+        // Jeśli nie, dodaj ją w UserRepository, albo filtruj w Javie (mniej wydajne, ale przy małej skali ok):
+
+        return userRepository.findAllByRole_Name("Pilkarz").stream()
+                .filter(u -> Boolean.TRUE.equals(u.getLookingForClub()))
+                .toList();
+    }
+
     public List<User> getFreeCoaches(){
         // Metoda korzysta z UserRepository.findAllByRole_Name
         return userRepository.findAllByRole_Name("Trener");
+    }
+
+    public User getUserByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika: " + login));
+    }
+
+    public User getUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika: " + id));
+    }
+
+    public void updateLookingForClub(String login, boolean isLooking) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new IllegalArgumentException("Brak użytkownika"));
+
+        user.setLookingForClub(isLooking);
+        userRepository.save(user);
     }
 }

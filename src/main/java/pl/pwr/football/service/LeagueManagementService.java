@@ -201,4 +201,30 @@ public class LeagueManagementService {
 
         teamInLeagueRepository.save(til);
     }
+
+    public void updateTeamDetails(Integer teamId, String name, String abbreviation,
+                                  String stadium, String address,
+                                  String kitsHome, String kitsAway) {
+
+        var team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono drużyny"));
+
+        team.setName(name);
+        team.setAbbreviation(abbreviation);
+        team.setStadium(stadium);
+        team.setAddress(address);
+        team.setKitsHome(kitsHome);
+        team.setKitsAway(kitsAway);
+
+        teamRepository.save(team);
+    }
+
+    public Team getTeamByTeamInLeagueId(Integer teamInLeagueId) {
+        // To wymaga repozytorium TeamInLeagueRepository
+        var til = teamInLeagueRepository.findById(teamInLeagueId)
+                .orElseThrow(() -> new IllegalArgumentException("Błąd danych ligowych"));
+
+        return teamRepository.findById(til.getTeamId())
+                .orElseThrow(() -> new IllegalArgumentException("Błąd danych drużyny"));
+    }
 }

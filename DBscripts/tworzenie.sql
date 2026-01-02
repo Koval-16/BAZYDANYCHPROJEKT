@@ -100,6 +100,8 @@ CREATE TABLE PrzynaleznosciPilkarzy(
     PilkarzZolteKartki INT DEFAULT 0 CHECK (PilkarzZolteKartki >= 0),
     PilkarzCzerwoneKartki INT DEFAULT 0 CHECK (PilkarzCzerwoneKartki >= 0),
     PilkarzCzyZawieszony BOOLEAN DEFAULT FALSE,
+    PilkarzPotwierdzony BOOLEAN DEFAULT FALSE,
+    PilkarzAktywny BOOLEAN DEFAULT FALSE,
 
     UNIQUE(PilkarzID, DruzynaWLidzeID)
 );
@@ -172,6 +174,7 @@ SELECT
     d.DruzynaNazwa              AS StatystykiDruzynaNazwa,
     u.UzytkownikImie            AS StatystykiPilkarzImie,
     u.UzytkownikNazwisko        AS StatystykiPilkarzNazwisko,
+    pp.PrzynaleznoscPilkarzaID  AS StatystykiPilkarzID,
     pp.PilkarzLiczbaGoli        AS StatystykiPilkarzGole,
     pp.PilkarzZolteKartki       AS StatystykiPilkarzZolteKartki,
     pp.PilkarzCzerwoneKartki    AS StatystykiPilkarzCzerwoneKartki
@@ -189,12 +192,16 @@ SELECT
     u.UzytkownikDataUrodzenia   AS ListaPilkarzyPilkarzDataUrodzenia,
     d.DruzynaNazwa              AS ListaPilkarzyDruzynaNazwa,
     d.DruzynaID                 AS ListaPilkarzyDruzynaID,
-    dwl.LigaSezonID             AS ListaPilkarzyLigaSezonID
+    dwl.LigaSezonID             AS ListaPilkarzyLigaSezonID,
+    u.UzytkownikSzukaKlubu      AS ListaPilkarzySzukaKlubu, --nowe
+    COALESCE(s.SezonCzyAktywny, FALSE) AS ListaPilkarzyCzySezonAktywny --nowe
 FROM Uzytkownicy u
 JOIN Role r ON u.RolaID = r.RolaID
 LEFT JOIN PrzynaleznosciPilkarzy pp ON u.UzytkownikID = pp.PilkarzID
 LEFT JOIN DruzynyWLidze dwl ON pp.DruzynaWLidzeID = dwl.DruzynaWLidzeID
 LEFT JOIN Druzyny d ON dwl.DruzynaID = d.DruzynaID
+LEFT JOIN LigaSezon ls ON dwl.LigaSezonID = ls.LigaSezonID --nowe
+LEFT JOIN Sezony s ON ls.SezonID = s.SezonID --nowe
 WHERE r.RolaID = 4;
 
 CREATE OR REPLACE VIEW WidokTrenerow AS
@@ -219,6 +226,7 @@ SELECT
     ls.LigaSezonID              AS KlubWLidzeLigaSezonID,
     l.LigaNazwa                 AS KlubWLidzeLigaNazwa,
     s.SezonRok                  AS KlubWLidzeSezonRok,
+    dwl.DruzynaWLidzeID         AS KlubWLidzeID,
     d.DruzynaNazwa              AS KlubWLidzeDruzynaNazwa,
     d.DruzynaSkrot              AS KlubWLidzeDruzynaSkrot,
     d.DruzynaStadion            AS KlubWLidzeDruzynaStadion,
@@ -326,6 +334,38 @@ BEFORE INSERT ON PrzynaleznosciPilkarzy
 FOR EACH ROW
 EXECUTE FUNCTION sprawdz_multiklubowosc_pilkarza();
 
+CREATE OR REPLACE FUNCTION sprawdz_multiklubowosc_trenera()
+RETURNS TRIGGER AS $$
+DECLARE
+v_TargetSezonID INT;
+    v_Count INT;
+BEGIN
+    -- 1. Ustalmy sezon docelowej drużyny
+SELECT ls.SezonID INTO v_TargetSezonID
+FROM DruzynyWLidze dwl
+         JOIN LigaSezon ls ON dwl.LigaSezonID = ls.LigaSezonID
+WHERE dwl.DruzynaWLidzeID = NEW.DruzynaWLidzeID;
+
+-- 2. Sprawdźmy, czy ten trener ma już klub w tym samym sezonie
+SELECT COUNT(*) INTO v_Count
+FROM PrzynaleznosciTrenerow pt
+         JOIN DruzynyWLidze dwl ON pt.DruzynaWLidzeID = dwl.DruzynaWLidzeID
+         JOIN LigaSezon ls ON dwl.LigaSezonID = ls.LigaSezonID
+WHERE pt.TrenerID = NEW.TrenerID
+  AND ls.SezonID = v_TargetSezonID;
+
+-- 3. Blokada
+IF v_Count > 0 THEN
+        RAISE EXCEPTION 'Ten trener prowadzi już inną drużynę w tym sezonie!';
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_jeden_klub_trenera_na_sezon
+    BEFORE INSERT ON PrzynaleznosciTrenerow
+    FOR EACH ROW
+    EXECUTE FUNCTION sprawdz_multiklubowosc_trenera();
 
 -- AKTUALIZACJA TABELI PO MECZU
 CREATE OR REPLACE FUNCTION aktualizuj_statystyki_po_meczu()

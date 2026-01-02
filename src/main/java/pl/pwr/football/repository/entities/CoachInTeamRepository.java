@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.pwr.football.entity.entities.CoachInTeam;
 
+import java.util.Optional;
+
 public interface CoachInTeamRepository extends JpaRepository<CoachInTeam, Integer> {
     // Czy drużyna ma już trenera?
     boolean existsByTeamInLeagueId(Integer teamInLeagueId);

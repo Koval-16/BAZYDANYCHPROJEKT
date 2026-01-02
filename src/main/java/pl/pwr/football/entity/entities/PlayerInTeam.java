@@ -29,6 +29,12 @@ public class PlayerInTeam {
     @Column(name = "PilkarzCzyZawieszony")
     private boolean suspended = false;
 
+    @Column(name = "PilkarzPotwierdzony")
+    private boolean confirmed = false;
+
+    @Column(name = "PilkarzAktywny")
+    private boolean active = false;
+
     public PlayerInTeam() {}
 
     public Integer getId() { return id; }
@@ -51,4 +57,19 @@ public class PlayerInTeam {
 
     public boolean isSuspended() { return suspended; }
     public void setSuspended(boolean suspended) { this.suspended = suspended; }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

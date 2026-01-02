@@ -32,7 +32,7 @@ public class Match {
     private LocalDate proposedDate;
 
     @Column(name = "MeczStatusPropozycji")
-    private Integer proposalStatus; // 0=brak, 1=propozycja, 2=zaakceptowane
+    private Integer proposalStatus; // 0=brak, 1=propozycja, 2=do akceptacji przez admina, 3=zaakceptowane
 
     @Column(name = "MeczCzyZagrany")
     private boolean played = false;

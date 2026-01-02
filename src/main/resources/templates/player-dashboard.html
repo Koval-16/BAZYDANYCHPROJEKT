@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Panel Piłkarza</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-primary">Panel Zawodnika</h2>
+        <p class="text-muted mb-0">Witaj, <span sec:authentication="name"></span>!</p>
+    </div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-outline-secondary">Wyloguj</button>
+    </form>
+</div>
+
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-info h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">👤 Twój Status</h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="mb-3">Czy szukasz nowego klubu?</p>
+
+                <form th:action="@{/pilkarz/status}" method="post">
+                    <div class="form-check form-switch d-flex justify-content-center gap-2 mb-3">
+                        <input class="form-check-input" type="checkbox" id="statusSwitch"
+                               name="lookingForClub"
+                               th:checked="${user.lookingForClub}"
+                               onchange="this.form.submit()">
+                        <label class="form-check-label fw-bold" for="statusSwitch">
+                            <span th:if="${user.lookingForClub}" class="text-success">TAK, szukam</span>
+                            <span th:unless="${user.lookingForClub}" class="text-secondary">NIE, mam klub</span>
+                        </label>
+                    </div>
+                    <small class="text-muted">Trenerzy widzą Cię na liście transferowej tylko gdy to jest włączone.</small>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100" th:classappend="${currentTeam != null} ? 'border-success' : 'border-secondary'">
+            <div class="card-header text-white" th:classappend="${currentTeam != null} ? 'bg-success' : 'bg-secondary'">
+                <h5 class="mb-0">⚽ Twoja Drużyna</h5>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+
+                <div th:if="${currentTeam != null}" class="text-center w-100">
+                    <h1 class="display-4 fw-bold text-success" th:text="${currentTeam.team.name}">Nazwa Klubu</h1>
+                    <p class="lead">Stadion: <span th:text="${currentTeam.team.stadium}"></span></p>
+                    <hr>
+
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <div class="me-auto">
+                            <strong>Chcesz odejść?</strong> Pamiętaj, że możesz to zrobić tylko przed meczem.
+                        </div>
+                        <form th:action="@{/pilkarz/zakoncz}" method="post" onsubmit="return confirm('Czy na pewno chcesz opuścić klub?');">
+                            <input type="hidden" name="contractId" th:value="${currentTeam.contract.id}"/>
+                            <button type="submit" class="btn btn-danger fw-bold">🚪 Opuść Drużynę</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div th:if="${currentTeam == null}" class="text-center py-4">
+                    <h3 class="text-muted">Jesteś wolnym agentem</h3>
+                    <p>Ustaw status na "Szukam klubu" i czekaj na oferty od trenerów.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">📩 Otrzymane Oferty</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Klub</th>
+                        <th>Stadion</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="invite : ${invitations}">
+                        <td class="fw-bold" th:text="${invite.team.name}">FC Barcelona</td>
+                        <td th:text="${invite.team.stadium}">Camp Nou</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <form th:action="@{/pilkarz/akceptuj}" method="post">
+                                    <input type="hidden" name="contractId" th:value="${invite.contract.id}"/>
+                                    <button type="submit" class="btn btn-sm btn-success">✅ Dołącz</button>
+                                </form>
+
+                                <form th:action="@{/pilkarz/zakoncz}" method="post">
+                                    <input type="hidden" name="contractId" th:value="${invite.contract.id}"/>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">❌ Odrzuć</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(invitations)}">
+                        <td colspan="3" class="text-center py-4 text-muted">
+                            Brak nowych ofert transferowych.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
