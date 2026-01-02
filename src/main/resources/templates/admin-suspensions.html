@@ -11,7 +11,7 @@
         <h2 class="fw-bold text-danger">⚖️ Komisja Dyscyplinarna</h2>
         <p class="text-muted">Rozpatrywanie wniosków sędziów o zawieszenie zawodników.</p>
     </div>
-    <a href="/admin/panel" class="btn btn-outline-secondary">Wróć do panelu</a>
+    <a href="/admin" class="btn btn-outline-secondary">Wróć do panelu</a>
 </div>
 
 <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
@@ -59,10 +59,10 @@
                 </td>
 
                 <td>
-        <span class="d-flex align-items-center">
-            <span class="me-2">🚩</span>
-            <span th:text="${req.refereeFullName}">Szymon Marciniak</span>
-        </span>
+                    <span class="d-flex align-items-center">
+                        <span class="me-2">🚩</span>
+                        <span th:text="${req.refereeFullName}">Szymon Marciniak</span>
+                    </span>
                 </td>
 
                 <td class="text-end">

@@ -7,8 +7,14 @@
 <body class="bg-light container mt-5">
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <a href="/trener" class="btn btn-outline-secondary">&larr; Wróć do panelu głównego</a>
-    <h2 class="fw-bold text-primary" th:text="${team.name}">Twoja Drużyna</h2>
+    <a th:href="@{/trener}" class="btn btn-outline-secondary">&larr; Wróć do panelu głównego</a>
+
+    <div class="d-flex align-items-center gap-3">
+        <h2 class="fw-bold text-primary mb-0" th:text="${team.name}">Twoja Drużyna</h2>
+        <a th:href="@{/dom/druzyny/{id}(id=${team.id})}" target="_blank" class="btn btn-sm btn-outline-primary" title="Zobacz jak inni widzą Twój zespół">
+            👁️ Podgląd
+        </a>
+    </div>
 </div>
 
 <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
@@ -48,7 +54,7 @@
                             <span th:unless="${member.contract.confirmed}" class="badge bg-warning text-dark">⏳ Oczekuje</span>
                         </td>
                         <td class="text-end">
-                            <form th:action="@{/trener/usun-pilkarza}" method="post" onsubmit="return confirm('Potwierdzasz?');">
+                            <form th:action="@{/trener/usun-pilkarza}" method="post" onsubmit="return confirm('Potwierdzasz usunięcie zawodnika?');">
                                 <input type="hidden" name="contractId" th:value="${member.contract.id}"/>
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <span th:if="${member.contract.confirmed}">❌ Usuń</span>

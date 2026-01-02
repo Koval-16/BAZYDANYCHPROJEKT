@@ -1,26 +1,47 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Lista Drużyn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hover-effect:hover { transform: translateY(-5px); transition: 0.3s; }
+        .card { border: none; }
+    </style>
 </head>
 <body class="bg-light container mt-5">
 
-<a href="/hub" class="btn btn-outline-secondary mb-3">&larr; Wróć do Menu</a>
+<a href="/hub" class="btn btn-outline-secondary mb-4">&larr; Wróć do Menu</a>
 
-<h2>Lista Drużyn</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary mb-0">🏆 Lista Klubów</h2>
+
+    <a sec:authorize="hasRole('Administrator')"
+       href="/admin/druzyny/nowa"
+       class="btn btn-success fw-bold shadow-sm">
+        ➕ Dodaj Drużynę
+    </a>
+</div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col" th:each="team : ${teams}">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <h5 class="card-title" th:text="${team.name}">Nazwa Drużyny</h5>
-                <p class="text-muted" th:text="${team.abbreviation}">SKR</p>
+        <div class="card h-100 shadow-sm hover-effect">
+            <div class="card-body text-center d-flex flex-column">
 
-                <a th:href="@{/druzyny/{id}(id=${team.id})}" class="btn btn-primary btn-sm">
+                <div class="h1 mb-2">⚽</div>
+                <h5 class="card-title fw-bold" th:text="${team.name}">Nazwa Drużyny</h5>
+                <p class="text-muted fw-bold font-monospace" th:text="${team.abbreviation}">SKR</p>
+
+                <a th:href="@{/dom/druzyny/{id}(id=${team.id})}" class="btn btn-outline-primary btn-sm mt-auto stretched-link">
                     Zobacz szczegóły
                 </a>
             </div>
+        </div>
+    </div>
+
+    <div class="col-12" th:if="${#lists.isEmpty(teams)}">
+        <div class="alert alert-info text-center">
+            Brak zarejestrowanych drużyn w systemie.
         </div>
     </div>
 </div>

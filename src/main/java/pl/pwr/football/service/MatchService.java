@@ -1,6 +1,7 @@
 package pl.pwr.football.service;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.pwr.football.entity.entities.Match;
@@ -23,11 +24,14 @@ public class MatchService {
     }
 
     public List<MatchView> getAllMatches() {
-        return matchViewRepository.findAll();
+        return matchViewRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public List<MatchView> getMatchesByLeague(Integer leagueSeasonId) {
-        return matchViewRepository.findByLeagueSeasonId(leagueSeasonId);
+        return matchViewRepository.findByLeagueSeasonId(
+                leagueSeasonId,
+                Sort.by(Sort.Direction.ASC, "id") // Sortuj rosnąco po ID
+        );
     }
 
     public List<MatchView> getMatchesByTeam(Integer hostId, Integer awayId){
@@ -134,5 +138,9 @@ public class MatchService {
 
     public Match getMatchById(Integer matchId) {
         return matchRepository.findById(matchId).orElseThrow(() -> new IllegalArgumentException("Mecz nie istnieje"));
+    }
+
+    public List<MatchView> findMatchesForTeamInActiveSeason (Integer id) {
+        return matchViewRepository.findMatchesForTeamInActiveSeason(id);
     }
 }

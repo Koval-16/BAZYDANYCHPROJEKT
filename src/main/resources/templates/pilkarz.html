@@ -4,77 +4,118 @@
 <head>
     <title>Panel Piłkarza</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hover-effect:hover { transform: translateY(-5px); transition: 0.3s; }
+        .card { border: none; }
+    </style>
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-dark bg-success mb-4">
+<nav class="navbar navbar-dark bg-success mb-4 shadow-sm">
     <div class="container">
-        <span class="navbar-brand">👟 Strefa Piłkarza</span>
+        <span class="navbar-brand fw-bold">👟 Strefa Piłkarza</span>
         <div class="d-flex align-items-center text-white">
-            Witaj, <strong class="ms-1 me-3" sec:authentication="name"></strong>
+            <span class="me-3">Witaj, <strong sec:authentication="name"></strong></span>
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="btn btn-sm btn-outline-light">Wyloguj</button>
+                <button type="submit" class="btn btn-sm btn-outline-light fw-bold">Wyloguj</button>
             </form>
         </div>
     </div>
 </nav>
 
-<div class="container">
+<div class="container pb-5">
 
-    <div th:if="${ostatniMecz != null}" class="alert alert-success shadow-sm mb-4">
-        <h5 class="alert-heading">Twój ostatni mecz:</h5>
+    <div th:if="${ostatniMecz != null}" class="alert alert-success shadow-sm mb-4 border-success">
+        <h5 class="alert-heading fw-bold">⚽ Wynik Twojego ostatniego meczu:</h5>
         <hr>
-        <p class="mb-0">
-            <strong th:text="${ostatniMecz.hostName}">Gospodarz</strong>
-            <span class="badge bg-dark mx-2" th:text="${ostatniMecz.hostResult} + ' : ' + ${ostatniMecz.awayResult}">2:1</span>
-            <strong th:text="${ostatniMecz.awayName}">Gość</strong>
+        <p class="mb-0 fs-5 text-center">
+            <span th:text="${ostatniMecz.hostName}">Gospodarz</span>
+            <span class="badge bg-dark mx-3" th:text="${ostatniMecz.hostResult} + ' : ' + ${ostatniMecz.awayResult}">2:1</span>
+            <span th:text="${ostatniMecz.awayName}">Gość</span>
         </p>
     </div>
 
-    <div class="card shadow border-primary mb-4">
-        <div class="card-body d-flex justify-content-between align-items-center bg-white">
-            <div>
-                <h4 class="card-title text-primary mb-1">👤 Mój Panel Zawodnika</h4>
-                <p class="text-muted mb-0">Zarządzaj kontraktem, transferami i statusem.</p>
+    <h2 class="mb-4 fw-bold text-secondary">Centrum Kariery</h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card h-100 text-center shadow-sm hover-effect border-success border-2">
+                <div class="card-body">
+                    <div class="h1 mb-3">👤</div>
+                    <h4 class="card-title fw-bold text-success">Mój Profil</h4>
+                    <p class="card-text text-muted">Zarządzaj kontraktem, transferami i statusem.</p>
+                    <a href="/pilkarz/panel" class="btn btn-success w-50 fw-bold stretched-link">Wejdź</a>
+                </div>
             </div>
-            <a href="/pilkarz/panel" class="btn btn-primary btn-lg px-4">
-                Wejdź &rarr;
-            </a>
         </div>
-    </div>
 
-    <h3 class="mb-3">Menu Główne</h3>
+        <div class="col-md-6">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">📅</div>
+                    <h4 class="card-title">Terminarz Ligi</h4>
+                    <p class="card-text text-muted">Sprawdź, kiedy i z kim grają rywale.</p>
+                    <a href="/dom/mecze" class="btn btn-outline-dark w-50 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-    <div class="list-group shadow-sm">
-        <a href="/mecze" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>📅 <strong>Terminarz Meczów</strong></div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">🏆</div>
+                    <h5 class="card-title">Kluby</h5>
+                    <p class="card-text text-muted small">Lista wszystkich drużyn.</p>
+                    <a href="/dom/druzyny" class="btn btn-outline-dark w-100 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-        <a href="/druzyny" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>🏆 <strong>Lista Klubów</strong></div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">👟</div>
+                    <h5 class="card-title">Inni Piłkarze</h5>
+                    <p class="card-text text-muted small">Statystyki rywali.</p>
+                    <a href="/dom/pilkarze" class="btn btn-outline-dark w-100 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-        <a href="/sezony" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>🗓️ <strong>Sezony (Tabele)</strong></div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">🗓️</div>
+                    <h5 class="card-title">Sezony</h5>
+                    <p class="card-text text-muted small">Tabele i historia.</p>
+                    <a href="/dom/sezony" class="btn btn-outline-dark w-100 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-        <a href="/ligi" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>🌍 <strong>Ligi</strong></div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">🌍</div>
+                    <h5 class="card-title">Ligi</h5>
+                    <p class="card-text text-muted small">Struktura rozgrywek.</p>
+                    <a href="/dom/ligi" class="btn btn-outline-dark w-100 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-        <a href="/pilkarze" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>👟 <strong>Inni Piłkarze</strong> (Statystyki)</div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 text-center shadow-sm hover-effect">
+                <div class="card-body">
+                    <div class="h1 mb-3">🚩</div>
+                    <h5 class="card-title">Sędziowie</h5>
+                    <p class="card-text text-muted small">Lista arbitrów.</p>
+                    <a href="/dom/sedziowie" class="btn btn-outline-dark w-100 stretched-link">Przejdź</a>
+                </div>
+            </div>
+        </div>
 
-        <a href="/sedziowie" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>🚩 <strong>Lista Sędziów</strong></div>
-            <span class="badge bg-success rounded-pill">&rarr;</span>
-        </a>
     </div>
 </div>
 

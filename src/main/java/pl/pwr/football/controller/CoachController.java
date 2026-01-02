@@ -62,7 +62,7 @@ public class CoachController {
             squadList.add(new SquadMemberViewDto(pit, playerUser));
         }
         model.addAttribute("squad", squadList);
-        List<MatchView> matches = matchService.getMatchesByTeam(teamId,teamId); // Używamy metody zwracającej widok
+        List<MatchView> matches = matchService.findMatchesForTeamInActiveSeason(teamId); // Używamy metody zwracającej widok
         model.addAttribute("matches", matches);
         model.addAttribute("teamInLeagueId", teamInLeagueId);
         model.addAttribute("teamId", teamId);
@@ -87,14 +87,6 @@ public class CoachController {
             ra.addFlashAttribute("errorMessage", "Błąd edycji: " + e.getMessage());
         }
         return "redirect:/trener/panel";
-    }
-
-    // F26: Lista piłkarzy szukających klubu
-    @GetMapping("/trener/transfery")
-    public String transferMarket(Model model) {
-        // Zakładam, że dodamy taką metodę w UserService lub PersonViewService
-        // model.addAttribute("freePlayers", userService.getFreePlayers());
-        return "transfer-market";
     }
 
     // F23: Dodanie piłkarza do drużyny

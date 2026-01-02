@@ -1,6 +1,7 @@
 package pl.pwr.football.repository.views;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface MatchViewRepository extends JpaRepository<MatchView, Integer> {
 
-    List<MatchView> findByLeagueSeasonId(Integer leagueSeasonId);
+    List<MatchView> findByLeagueSeasonId(Integer leagueSeasonId, Sort sort);
 
     List<MatchView> findByHostIdOrAwayId(Integer hostId, Integer awayId);
 
@@ -25,4 +26,15 @@ public interface MatchViewRepository extends JpaRepository<MatchView, Integer> {
     Integer countUnfinishedMatches(@Param("seasonId") Integer seasonId);
 
     List<MatchView> findByRefereeIdOrderByDateAsc(Integer refereeId);
+
+    @Query("""
+        SELECT m
+        FROM MatchView m, LeagueSeason ls, Season s
+        WHERE m.leagueSeasonId = ls.id
+          AND ls.seasonId = s.id
+          AND s.active = true
+          AND (m.hostId = :teamId OR m.awayId = :teamId)
+        ORDER BY m.date ASC
+    """)
+    List<MatchView> findMatchesForTeamInActiveSeason(@Param("teamId") Integer teamId);
 }

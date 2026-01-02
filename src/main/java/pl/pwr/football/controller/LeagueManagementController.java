@@ -111,7 +111,7 @@ public class LeagueManagementController {
         } catch (Exception e) {
             ra.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/sezony/" + seasonId;
+        return "redirect:/dom/sezony/" + seasonId;
     }
 
     // ================= LIGI (LEAGUES) =================
@@ -159,7 +159,7 @@ public class LeagueManagementController {
     @GetMapping("/admin/rozgrywki/{leagueSeasonId}/druzyny")
     public String getLeagueSeasonDetails(@PathVariable Integer leagueSeasonId, Model model) {
         var view = leagueManagementService.getLeagueSeasonViewById(leagueSeasonId);
-        if (view == null) return "redirect:/sezony";
+        if (view == null) return "redirect:/dom/sezony";
         model.addAttribute("leagueSeason", view);
 
         model.addAttribute("currentTeams", tableService.getTable(leagueSeasonId));

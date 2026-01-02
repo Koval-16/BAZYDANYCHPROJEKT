@@ -63,15 +63,22 @@
                 <div th:if="${currentTeam != null}" class="text-center w-100">
                     <h1 class="display-4 fw-bold text-success" th:text="${currentTeam.team.name}">Nazwa Klubu</h1>
                     <p class="lead">Stadion: <span th:text="${currentTeam.team.stadium}"></span></p>
+
+                    <div class="mb-4">
+                        <a th:href="@{/dom/druzyny/{id}(id=${currentTeam.team.id})}" target="_blank" class="btn btn-outline-success">
+                            👁️ Zobacz profil klubu i terminarz
+                        </a>
+                    </div>
+
                     <hr>
 
-                    <div class="alert alert-warning d-flex align-items-center" role="alert">
-                        <div class="me-auto">
-                            <strong>Chcesz odejść?</strong> Pamiętaj, że możesz to zrobić tylko przed meczem.
+                    <div class="alert alert-warning d-flex align-items-center justify-content-between" role="alert">
+                        <div>
+                            <strong>Chcesz odejść?</strong> <br> Możesz to zrobić tylko przed meczem.
                         </div>
                         <form th:action="@{/pilkarz/zakoncz}" method="post" onsubmit="return confirm('Czy na pewno chcesz opuścić klub?');">
                             <input type="hidden" name="contractId" th:value="${currentTeam.contract.id}"/>
-                            <button type="submit" class="btn btn-danger fw-bold">🚪 Opuść Drużynę</button>
+                            <button type="submit" class="btn btn-danger fw-bold btn-sm">🚪 Opuść Drużynę</button>
                         </form>
                     </div>
                 </div>
@@ -101,7 +108,11 @@
                     </thead>
                     <tbody>
                     <tr th:each="invite : ${invitations}">
-                        <td class="fw-bold" th:text="${invite.team.name}">FC Barcelona</td>
+                        <td class="fw-bold">
+                            <a th:href="@{/dom/druzyny/{id}(id=${invite.team.id})}" target="_blank" class="text-decoration-none text-dark">
+                                <span th:text="${invite.team.name}">FC Barcelona</span> 🔗
+                            </a>
+                        </td>
                         <td th:text="${invite.team.stadium}">Camp Nou</td>
                         <td>
                             <div class="d-flex gap-2">

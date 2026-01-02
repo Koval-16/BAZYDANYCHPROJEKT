@@ -3,10 +3,11 @@
 <head>
     <title>Zarządzanie Drużynami i Terminarzem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
-<body class="bg-light container mt-5">
+<body class="bg-light container mt-5 pb-5">
 
-<a th:href="@{/rozgrywki/{id}(id=${leagueSeason.id})}" class="btn btn-outline-secondary mb-3">
+<a th:href="@{/dom/rozgrywki/{id}(id=${leagueSeason.id})}" class="btn btn-outline-secondary mb-3">
     &larr; Wróć do tabeli ligi
 </a>
 
@@ -27,7 +28,7 @@
 
 <div class="row mb-4">
     <div class="col-12">
-        <div th:if="${!hasSchedule}" class="alert alert-info d-flex justify-content-between align-items-center">
+        <div th:if="${!hasSchedule}" class="alert alert-info d-flex justify-content-between align-items-center shadow-sm">
             <span>Zakończyłeś dodawanie drużyn? Wygeneruj terminarz meczów!</span>
             <form th:action="@{/admin/rozgrywki/{id}/generuj-terminarz(id=${leagueSeason.id})}" method="post"
                   onsubmit="return confirm('Czy na pewno? Tej operacji nie można cofnąć automatycznie.');">
@@ -35,7 +36,7 @@
             </form>
         </div>
 
-        <div th:if="${hasSchedule}" class="alert alert-success">
+        <div th:if="${hasSchedule}" class="alert alert-success shadow-sm">
             ✅ Terminarz dla tej ligi został wygenerowany. Poniżej możesz zarządzać meczami.
         </div>
     </div>
@@ -88,7 +89,11 @@
                     <tbody>
                     <tr th:each="row, iter : ${currentTeams}">
                         <td th:text="${iter.count}">1</td>
-                        <td class="fw-bold" th:text="${row.teamName}">Real Madryt</td>
+                        <td>
+                            <a th:href="@{/dom/druzyny/{id}(id=${row.teamId})}" target="_blank" class="text-decoration-none text-dark fw-bold">
+                                <span th:text="${row.teamName}">Real Madryt</span> 🔗
+                            </a>
+                        </td>
                         <td>
                             <form th:action="@{/admin/rozgrywki/{leagueId}/druzyny/{tilId}/trener(leagueId=${leagueSeason.id}, tilId=${row.id})}"
                                   method="post" class="d-flex gap-2">
@@ -129,7 +134,8 @@
                     <tr>
                         <th>Mecz</th>
                         <th>Data Oficjalna</th>
-                        <th>Sędzia</th> <th>Status / Propozycja</th>
+                        <th>Sędzia</th>
+                        <th>Status / Propozycja</th>
                         <th class="text-end">Decyzja Administratora</th>
                     </tr>
                     </thead>
@@ -176,9 +182,9 @@
                             </div>
 
                             <div th:if="${match.isPlayed}">
-        <span class="badge bg-light text-dark border">
-            👮 <span th:text="${match.refereeName != null ? match.refereeName : 'Brak sędziego'}"></span>
-        </span>
+                                <span class="badge bg-light text-dark border">
+                                    👮 <span th:text="${match.refereeName != null ? match.refereeName : 'Brak sędziego'}"></span>
+                                </span>
                             </div>
                         </td>
 
