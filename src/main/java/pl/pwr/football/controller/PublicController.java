@@ -14,7 +14,7 @@ public class PublicController {
         this.personViewService = personViewService;
     }
 
-    @GetMapping("/pilkarze")
+    @GetMapping("/dom/pilkarze")
     public String listaPilkarzy(Model model) {
         var lista = personViewService.getAllPlayers();
         model.addAttribute("tytul", "Lista Piłkarzy");
@@ -23,7 +23,7 @@ public class PublicController {
         return "lista-osob";
     }
 
-    @GetMapping("/sedziowie")
+    @GetMapping("/dom/sedziowie")
     public String listaSedziow(Model model) {
         var lista = personViewService.getAllReferees();
         model.addAttribute("tytul", "Lista Sędziów");

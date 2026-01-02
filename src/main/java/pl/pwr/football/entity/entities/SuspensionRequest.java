@@ -20,17 +20,20 @@ public class SuspensionRequest {
     @Column(name = "StatystykaMeczuID", nullable = false)
     private Integer matchStatisticId;
 
-    @Column(name = "WniosekOZawieszenieCzyRozpatrzony")
-    private boolean reviewed = false;
+    @Column(name = "WniosekOZawieszenieStatus")
+    private Integer status = 0;
 
-    // np. 0=Odrzucony, 1=Zaakceptowany
-    @Column(name = "WniosekOZawieszenieDecyzja")
-    private Integer decision;
-
-    @Column(name = "WniosekOZawieszenieDlugoscKary")
-    private Integer penaltyLength;
+    @Column(name = "MeczZawieszeniaID")
+    private Integer suspensionMatchId;
 
     public SuspensionRequest() {}
+
+    public SuspensionRequest(Integer refereeId, Integer playerInTeamId, Integer matchStatisticId) {
+        this.refereeId = refereeId;
+        this.playerInTeamId = playerInTeamId;
+        this.matchStatisticId = matchStatisticId;
+        this.status = 0;
+    }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -44,12 +47,19 @@ public class SuspensionRequest {
     public Integer getMatchStatisticId() { return matchStatisticId; }
     public void setMatchStatisticId(Integer matchStatisticId) { this.matchStatisticId = matchStatisticId; }
 
-    public boolean isReviewed() { return reviewed; }
-    public void setReviewed(boolean reviewed) { this.reviewed = reviewed; }
+    public Integer getStatus() {
+        return status;
+    }
 
-    public Integer getDecision() { return decision; }
-    public void setDecision(Integer decision) { this.decision = decision; }
+    public Integer getSuspensionMatchId() {
+        return suspensionMatchId;
+    }
 
-    public Integer getPenaltyLength() { return penaltyLength; }
-    public void setPenaltyLength(Integer penaltyLength) { this.penaltyLength = penaltyLength; }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setSuspensionMatchId(Integer suspensionMatchId) {
+        this.suspensionMatchId = suspensionMatchId;
+    }
 }

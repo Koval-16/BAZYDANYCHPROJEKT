@@ -67,7 +67,6 @@
     </div>
 
     <div class="col-lg-4">
-
         <div class="card shadow mb-4 border-info">
             <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">ℹ️ Informacje o Klubie</h5>
@@ -84,25 +83,132 @@
             </div>
         </div>
 
-        <div class="card shadow border-success">
+        <div class="card shadow border-success mb-4">
             <div class="card-header bg-success text-white">
                 <h5 class="mb-0">➕ Transfery</h5>
             </div>
             <div class="card-body">
                 <form th:action="@{/trener/dodaj-pilkarza}" method="post">
-                    <input type="hidden" name="teamId" th:value="${teamInLeagueId}"/> <div class="mb-3">
-                    <label class="form-label fw-bold">Wolni zawodnicy:</label>
-                    <select name="playerId" class="form-select" required>
-                        <option value="" disabled selected>-- Wybierz --</option>
-                        <option th:each="player : ${freePlayers}"
-                                th:value="${player.id}"
-                                th:text="${player.name} + ' ' + ${player.surname}"></option>
-                    </select>
-                </div>
+                    <input type="hidden" name="teamId" th:value="${teamInLeagueId}"/>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Wolni zawodnicy:</label>
+                        <select name="playerId" class="form-select" required>
+                            <option value="" disabled selected>-- Wybierz --</option>
+                            <option th:each="player : ${freePlayers}"
+                                    th:value="${player.id}"
+                                    th:text="${player.name} + ' ' + ${player.surname}"></option>
+                        </select>
+                    </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">📩 Wyślij ofertę</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-5">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">📅 Terminarz i Negocjacje</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width: 35%;">Mecz</th>
+                        <th style="width: 30%;">Data / Status</th>
+                        <th class="text-end">Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="match : ${matches}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span th:class="${match.hostId == teamId} ? 'fw-bold text-primary' : 'text-dark'"
+                                      th:text="${match.hostName}">Gospodarz</span>
+                                <span class="badge bg-light text-secondary border mx-2">vs</span>
+                                <span th:class="${match.awayId == teamId} ? 'fw-bold text-primary' : 'text-dark'"
+                                      th:text="${match.awayName}">Gość</span>
+                            </div>
+                            <div th:if="${match.isPlayed}" class="mt-1">
+                                <span class="badge bg-dark">
+                                    Wynik: <span th:text="${match.hostResult} + ' : ' + ${match.awayResult}"></span>
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div th:if="${match.proposalStatus == 0 or match.proposalStatus == 3}">
+                                <div class="fs-6 fw-bold text-dark" th:text="${match.date}"></div>
+                                <span th:if="${match.proposalStatus == 3}" class="badge bg-success">✅ Data ustalona</span>
+                                <span th:if="${match.proposalStatus == 0}" class="badge bg-secondary">Brak propozycji zmian</span>
+                            </div>
+
+                            <div th:if="${match.proposalStatus == 1 or match.proposalStatus == 2}">
+                                <div class="fs-6 fw-bold text-warning text-dark" th:text="${match.proposedDate}"></div>
+
+                                <span th:if="${match.proposalStatus == 1}" class="badge bg-warning text-dark">📅 Propozycja w toku</span>
+                                <span th:if="${match.proposalStatus == 2}" class="badge bg-info text-dark">⏳ Czeka na Admina</span>
+                            </div>
+                        </td>
+
+                        <td class="text-end">
+                            <div th:if="${!match.isPlayed}">
+
+                                <div th:if="${match.hostId == teamId}">
+                                    <div th:if="${match.proposalStatus <= 1}">
+                                        <form th:action="@{/trener/mecze/proponuj}" method="post" class="d-flex justify-content-end align-items-center gap-2">
+                                            <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                            <div class="input-group input-group-sm" style="width: 170px;">
+                                                <input type="date" name="date" class="form-control" required th:value="${match.proposedDate}">
+                                                <button type="submit" class="btn btn-outline-primary" title="Zaproponuj zmianę">📩</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div th:if="${match.proposalStatus == 2}">
+                                        <small class="text-muted fst-italic">Czekamy na administratora...</small>
+                                    </div>
+                                </div>
+
+                                <div th:if="${match.awayId == teamId}">
+                                    <div th:if="${match.proposalStatus == 1}">
+                                        <span class="d-block small text-muted mb-1">Rywal proponuje zmianę:</span>
+                                        <div class="btn-group btn-group-sm">
+                                            <form th:action="@{/trener/mecze/odpowiedz}" method="post">
+                                                <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                                <input type="hidden" name="accepted" value="true"/>
+                                                <button type="submit" class="btn btn-success">Zgoda</button>
+                                            </form>
+                                            <form th:action="@{/trener/mecze/odpowiedz}" method="post" class="ms-1">
+                                                <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                                <input type="hidden" name="accepted" value="false"/>
+                                                <button type="submit" class="btn btn-danger">Odrzuć</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div th:if="${match.proposalStatus == 0}">
+                                        <small class="text-muted">Czekaj na propozycję gospodarza.</small>
+                                    </div>
+                                    <div th:if="${match.proposalStatus == 2}">
+                                        <small class="text-success fw-bold">Zgodziłeś się.</small> <small class="text-muted">Czekamy na admina.</small>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div th:if="${match.isPlayed}">
+                                <span class="badge bg-secondary">Zakończony</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(matches)}">
+                        <td colspan="3" class="text-center py-4 text-muted">Brak meczów w terminarzu.</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -118,7 +224,6 @@
             <div class="modal-body">
                 <form th:action="@{/trener/edytuj-druzyne}" method="post">
                     <input type="hidden" name="teamId" th:value="${team.id}"/>
-
                     <div class="mb-3">
                         <label class="form-label">Nazwa Klubu</label>
                         <input type="text" class="form-control" name="name" th:value="${team.name}" required>
@@ -145,7 +250,6 @@
                             <input type="text" class="form-control" name="kitsAway" th:value="${team.kitsAway}" required>
                         </div>
                     </div>
-
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-info text-white fw-bold">Zapisz zmiany</button>
                     </div>

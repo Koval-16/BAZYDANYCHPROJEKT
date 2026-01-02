@@ -46,13 +46,18 @@ public class MatchView {
     @Column(name = "WidokMeczySedziaID")
     private Integer refereeId;
 
+    @Column(name = "WidokMeczyDataProponowane")
+    private LocalDate proposedDate;
+
+    @Column(name = "WidokMeczyStatusPropozycji")
+    private Integer proposalStatus;
+
     public MatchView() {}
 
     public Integer getId() { return id; }
     public Integer getLeagueSeasonId() { return leagueSeasonId; }
     public LocalDate getDate() { return date; }
     public Boolean getIsPlayed() { return isPlayed; }
-
     public String getHostName() { return hostName; }
     public Integer getHostId() { return hostId; }
     public Integer getHostResult() { return hostResult; }
@@ -61,4 +66,6 @@ public class MatchView {
     public Integer getAwayId() { return awayId; }
     public String getRefereeName() { return refereeName; }
     public Integer getRefereeId() { return refereeId; }
+    public LocalDate getProposedDate() { return proposedDate; }
+    public Integer getProposalStatus() { return proposalStatus; }
 }

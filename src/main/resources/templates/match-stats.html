@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Statystyki Meczu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<a href="/sedzia/mecze" class="btn btn-outline-secondary mb-3">&larr; Wróć do listy meczów</a>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-dark text-white text-center">
+        <h3 class="mb-0">Protokół Meczowy</h3>
+        <p class="mb-0 fs-5">
+            Wynik: <span th:text="${match.homeScore}"></span> : <span th:text="${match.awayScore}"></span>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">➕ Dodaj Zdarzenie</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/sedzia/mecze/statystyki/dodaj}" method="post">
+                    <input type="hidden" name="matchId" th:value="${match.id}"/>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Rodzaj zdarzenia:</label>
+                        <select name="type" class="form-select" required>
+                            <option value="0">⚽ Gol</option>
+                            <option value="1">🟨 Żółta kartka</option>
+                            <option value="2">🟥 Czerwona kartka</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Wybierz zawodnika:</label>
+                        <select name="contractId" class="form-select" required size="10">
+                            <optgroup label="GOSPODARZE">
+                                <option th:each="p : ${hostSquad}"
+                                        th:value="${p.id}"
+                                        th:text="${p.name} + ' ' + ${p.surname} + ' (#' + ${p.id} + ')'"></option>
+                            </optgroup>
+                            <optgroup label="GOŚCIE">
+                                <option th:each="p : ${awaySquad}"
+                                        th:value="${p.id}"
+                                        th:text="${p.name} + ' ' + ${p.surname} + ' (#' + ${p.id} + ')'"></option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary fw-bold">Zapisz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger mt-3" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}" class="alert alert-success mt-3" th:text="${successMessage}"></div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">📜 Zapisane zdarzenia</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0 align-middle">
+                    <thead>
+                    <tr>
+                        <th>Zdarzenie</th>
+                        <th>Piłkarz</th>
+                        <th class="text-end">Opcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dto : ${stats}">
+                        <td>
+                            <span th:if="${dto.stat.type == 0}" class="badge bg-success">⚽ GOL</span>
+                            <span th:if="${dto.stat.type == 1}" class="badge bg-warning text-dark">🟨 Żółta</span>
+                            <span th:if="${dto.stat.type == 2}" class="badge bg-danger">🟥 Czerwona</span>
+                        </td>
+                        <td class="fw-bold" th:text="${dto.playerName}">Jan Kowalski</td>
+
+                        <td class="text-end">
+                            <form th:if="${dto.stat.type == 2}"
+                                  th:action="@{/sedzia/mecze/statystyki/wniosek}"
+                                  method="post"
+                                  class="d-inline-block me-1">
+
+                                <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                <input type="hidden" name="contractId" th:value="${dto.stat.playerInTeamId}"/>
+                                <input type="hidden" name="statId" th:value="${dto.stat.id}"/>
+
+                                <button type="submit" class="btn btn-sm btn-warning fw-bold text-dark"
+                                        title="Zgłoś wniosek o zawieszenie"
+                                        onclick="return confirm('Zgłosić wniosek o zawieszenie dla tego zawodnika?');">
+                                    ⚖️ Zgłoś
+                                </button>
+                            </form>
+
+                            <form th:action="@{/sedzia/mecze/statystyki/usun}" method="post" class="d-inline-block">
+                                <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                <input type="hidden" name="statId" th:value="${dto.stat.id}"/>
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Usuń wpis">❌</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

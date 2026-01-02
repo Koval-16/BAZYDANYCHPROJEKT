@@ -75,6 +75,11 @@ public class Match {
     public Integer getProposalStatus() {
         return proposalStatus;
     }
+
+    public boolean isPlayed() {
+        return played;
+    }
+
     public void setLeagueSeasonId(Integer leagueSeasonId) {
         this.leagueSeasonId = leagueSeasonId;
     }

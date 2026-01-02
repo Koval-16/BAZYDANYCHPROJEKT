@@ -125,9 +125,9 @@ CREATE TABLE WnioskiOZawieszenie (
     SedziaID INT NOT NULL REFERENCES Uzytkownicy(UzytkownikID),
     PilkarzID INT NOT NULL REFERENCES PrzynaleznosciPilkarzy(PrzynaleznoscPilkarzaID),
     StatystykaMeczuID INT NOT NULL REFERENCES StatystykiMeczu(StatystykaMeczuID),
-    WniosekOZawieszenieCzyRozpatrzony BOOLEAN,
-    WniosekOZawieszenieDecyzja INT,
-    WniosekOZawieszenieDlugoscKary INT
+    -- Status: 0=Oczekuje, 1=Zatwierdzony, 2=Odrzucony
+    WniosekOZawieszenieStatus INT,
+    MeczZawieszeniaID INT REFERNCES Mecze(MeczID)
 );
 
 CREATE OR REPLACE VIEW WidokTabeliLigowej AS
@@ -159,7 +159,9 @@ SELECT
     d_gosc.DruzynaNazwa                             AS WidokMeczyGoscNazwa,
     d_gosc.DruzynaID                                AS WidokMeczyGoscID,
     u.UzytkownikImie || ' ' || u.UzytkownikNazwisko AS WidokMeczySedziaNazwa,
-    u.UzytkownikID                                  AS WidokMeczySedziaID
+    u.UzytkownikID                                  AS WidokMeczySedziaID,
+    m.MeczDataProponowane                           AS WidokMeczyDataProponowane,
+    m.MeczStatusPropozycji                          AS WidokMeczyStatusPropozycji
 FROM Mecze m
 JOIN DruzynyWLidze dwl_gosp ON m.MeczGospodarzID = dwl_gosp.DruzynaWLidzeID
 JOIN Druzyny d_gosp ON dwl_gosp.DruzynaID = d_gosp.DruzynaID
@@ -265,6 +267,33 @@ SELECT
 FROM LigaSezon ls
 JOIN Ligi l ON ls.LigaID = l.LigaID
 JOIN Sezony sez ON ls.sezonID = sez.SezonID;
+
+CREATE OR REPLACE VIEW WidokWnioskowOZawieszenie AS
+SELECT
+    w.WniosekOZawieszenieID     AS WniosekID,
+    w.WniosekOZawieszenieStatus AS Status,
+    s.UzytkownikImie            AS SedziaImie,
+    s.UzytkownikNazwisko        AS SedziaNazwisko,
+    p.UzytkownikImie            AS PilkarzImie,
+    p.UzytkownikNazwisko        AS PilkarzNazwisko,
+    d.DruzynaNazwa              AS DruzynaNazwa,
+    m.MeczData                  AS DataIncydentu,
+    h_d.DruzynaNazwa            AS GospodarzNazwa,
+    a_d.DruzynaNazwa            AS GoscNazwa,
+    w.PilkarzID                 AS KontraktID,
+    w.MeczZawieszeniaID         AS MeczZawieszeniaID
+FROM WnioskiOZawieszenie w
+         JOIN Uzytkownicy s ON w.SedziaID = s.UzytkownikID
+         JOIN PrzynaleznosciPilkarzy pp ON w.PilkarzID = pp.PrzynaleznoscPilkarzaID
+         JOIN Uzytkownicy p ON pp.PilkarzID = p.UzytkownikID
+         JOIN DruzynyWLidze dwl ON pp.DruzynaWLidzeID = dwl.DruzynaWLidzeID
+         JOIN Druzyny d ON dwl.DruzynaID = d.DruzynaID
+         JOIN StatystykiMeczu sm ON w.StatystykaMeczuID = sm.StatystykaMeczuID
+         JOIN Mecze m ON sm.MeczID = m.MeczID
+         JOIN DruzynyWLidze h_dwl ON m.MeczGospodarzID = h_dwl.DruzynaWLidzeID
+         JOIN Druzyny h_d ON h_dwl.DruzynaID = h_d.DruzynaID
+         JOIN DruzynyWLidze a_dwl ON m.MeczGoscID = a_dwl.DruzynaWLidzeID
+         JOIN Druzyny a_d ON a_dwl.DruzynaID = a_d.DruzynaID;
 
 
 -- FUNKCJA KTÓRA UNIEMOŻLIWIA DWUKROTNE WSTAWIENIE DRUZYNY

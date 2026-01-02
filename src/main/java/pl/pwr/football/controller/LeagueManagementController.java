@@ -22,11 +22,10 @@ public class LeagueManagementController {
     private final LeagueManagementService leagueManagementService;
     private final PersonViewService personViewService;
     private final MatchService matchService;
-
-    // NOWE SERWISY (niezbędne do widoku manage-teams.html)
     private final TableService tableService;
     private final MatchScheduleService matchScheduleService; // Zmienione z ScheduleService na MatchScheduleService (zależnie jak masz w projekcie)
     private final UserService userService;
+    private final SuspensionService suspensionService;
 
     // Konstruktor z wszystkimi zależnościami
     public LeagueManagementController(LeagueManagementService leagueManagementService,
@@ -34,18 +33,20 @@ public class LeagueManagementController {
                                       MatchService matchService,
                                       TableService tableService,
                                       MatchScheduleService matchScheduleService,
-                                      UserService userService) {
+                                      UserService userService,
+                                      SuspensionService suspensionService) {
         this.leagueManagementService = leagueManagementService;
         this.personViewService = personViewService;
         this.matchService = matchService;
         this.tableService = tableService;
         this.matchScheduleService = matchScheduleService;
         this.userService = userService;
+        this.suspensionService = suspensionService;
     }
 
     // ================= SEZONY (SEASONS) =================
 
-    @GetMapping("/sezony")
+    @GetMapping("/dom/sezony")
     public String getAllSeasons(Model model) {
         model.addAttribute("seasons", leagueManagementService.getAllSeasons());
         if (!model.containsAttribute("newSeason")) {
@@ -54,7 +55,7 @@ public class LeagueManagementController {
         return "seasons";
     }
 
-    @GetMapping("/sezony/{seasonId}")
+    @GetMapping("/dom/sezony/{seasonId}")
     public String getSeasonDetails(@PathVariable Integer seasonId, Model model) {
         var lsList = leagueManagementService.getLeagueSeasonsBySeasonId(seasonId);
         var season = leagueManagementService.getSeasonById(seasonId);
@@ -84,7 +85,7 @@ public class LeagueManagementController {
             model.addAttribute("seasons", leagueManagementService.getAllSeasons());
             return "seasons";
         }
-        return "redirect:/sezony";
+        return "redirect:/dom/sezony";
     }
 
     @PreAuthorize("hasRole('Administrator')")
@@ -96,7 +97,7 @@ public class LeagueManagementController {
         } catch (Exception e) {
             ra.addFlashAttribute("errorMessageRedirect", "Nie można zakończyć: " + e.getMessage());
         }
-        return "redirect:/sezony";
+        return "redirect:/dom/sezony";
     }
 
     @PreAuthorize("hasRole('Administrator')")
@@ -115,7 +116,7 @@ public class LeagueManagementController {
 
     // ================= LIGI (LEAGUES) =================
 
-    @GetMapping("/ligi")
+    @GetMapping("/dom/ligi")
     public String getAllLeagues(Model model) {
         model.addAttribute("leagues", leagueManagementService.getAllLeagues());
         if (!model.containsAttribute("newLeague")) {
@@ -126,7 +127,7 @@ public class LeagueManagementController {
 
     // BRAKOWAŁO TEJ METODY - HISTORIA LIGI (/ligi/1)
     // To ona obsługuje plik league-details.html, który mi pokazałeś wcześniej
-    @GetMapping("/ligi/{leagueId}")
+    @GetMapping("/dom/ligi/{leagueId}")
     public String getLeagueHistory(@PathVariable Integer leagueId, Model model) {
         var history = leagueManagementService.getLeagueSeasonsByLeagueId(leagueId);
         model.addAttribute("ls", history);
@@ -149,7 +150,7 @@ public class LeagueManagementController {
             model.addAttribute("leagues", leagueManagementService.getAllLeagues());
             return "leagues";
         }
-        return "redirect:/ligi";
+        return "redirect:/dom/ligi";
     }
 
     // ================= KONKRETNE ROZGRYWKI (LeagueSeason) =================
@@ -157,30 +158,39 @@ public class LeagueManagementController {
     // TO JEST KLUCZOWA METODA, KTÓRĄ ODKOMENTOWAŁEM I NAPRAWIŁEM
     @GetMapping("/admin/rozgrywki/{leagueSeasonId}/druzyny")
     public String getLeagueSeasonDetails(@PathVariable Integer leagueSeasonId, Model model) {
-        // 1. Informacje o lidze (nagłówek)
         var view = leagueManagementService.getLeagueSeasonViewById(leagueSeasonId);
         if (view == null) return "redirect:/sezony";
-
         model.addAttribute("leagueSeason", view);
 
-        // 2. Tabela drużyn (lista w HTML: ${currentTeams})
         model.addAttribute("currentTeams", tableService.getTable(leagueSeasonId));
 
-        // 3. Wszystkie drużyny (lista w HTML: ${allTeams}) - do selecta
         model.addAttribute("allTeams", leagueManagementService.getAllTeams());
-
-        // 4. Obiekt formularza (w HTML: th:object="${addTeamDto}")
+        model.addAttribute("allCoaches", userService.getFreeCoaches());
         model.addAttribute("addTeamDto", new TeamInLeagueDto());
-
-        // 5. Czy terminarz jest wygenerowany? (w HTML: ${hasSchedule})
         boolean hasSchedule = matchScheduleService.hasSchedule(leagueSeasonId);
         model.addAttribute("hasSchedule", hasSchedule);
+        model.addAttribute("allReferees", personViewService.getAllReferees());
+        if (hasSchedule) {
+            var schedule = matchService.getMatchesByLeague(leagueSeasonId);
+            model.addAttribute("schedule", schedule);
+        }
 
-        // 6. Lista trenerów (w HTML: ${allCoaches})
-        model.addAttribute("allCoaches", userService.getFreeCoaches());
-
-        // Zwracamy nazwę pliku HTML, który wkleiłeś na początku
         return "manage-teams";
+    }
+
+    @PreAuthorize("hasRole('Administrator')")
+    @PostMapping("/admin/rozgrywki/{leagueSeasonId}/mecze/decyzja")
+    public String confirmMatchDate(@PathVariable Integer leagueSeasonId,
+                                   @RequestParam Integer matchId,
+                                   @RequestParam boolean accepted,
+                                   RedirectAttributes ra) {
+        try {
+            matchService.adminDecideDate(matchId, accepted);
+            ra.addFlashAttribute("successMessage", accepted ? "Zatwierdzono nową datę meczu." : "Odrzucono propozycję.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/rozgrywki/" + leagueSeasonId + "/druzyny";
     }
 
     @PreAuthorize("hasRole('Administrator')")
@@ -199,13 +209,13 @@ public class LeagueManagementController {
 
     // ================= DRUŻYNY (TEAMS) =================
 
-    @GetMapping("/druzyny")
+    @GetMapping("/dom/druzyny")
     public String getAllTeams(Model model) {
         model.addAttribute("teams", leagueManagementService.getAllTeams());
         return "teams";
     }
 
-    @GetMapping("/druzyny/{id}")
+    @GetMapping("/dom/druzyny/{id}")
     public String getTeamDetails(@PathVariable Integer id, Model model) {
         var team = leagueManagementService.getTeamById(id);
 
@@ -242,6 +252,50 @@ public class LeagueManagementController {
             model.addAttribute("errorMessage", e.getMessage());
             return "add-team";
         }
-        return "redirect:/druzyny";
+        return "redirect:/dom/druzyny";
+    }
+
+    @PreAuthorize("hasRole('Administrator')")
+    @PostMapping("/admin/rozgrywki/{leagueSeasonId}/mecze/sedzia")
+    public String assignRefereeToMatch(@PathVariable Integer leagueSeasonId,
+                                       @RequestParam Integer matchId,
+                                       @RequestParam(required = false) Integer refereeId,
+                                       RedirectAttributes ra) {
+        try {
+            // Jeśli refereeId jest null (np. wybrano opcję "Brak"), to też obsłużymy w serwisie (lub tu sprawdzamy)
+            if (refereeId == null) {
+                throw new IllegalArgumentException("Wybierz sędziego z listy.");
+            }
+            matchService.assignReferee(matchId, refereeId);
+            ra.addFlashAttribute("successMessage", "Przydzielono sędziego do meczu.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/rozgrywki/" + leagueSeasonId + "/druzyny";
+    }
+
+    @GetMapping("/admin/wnioski")
+    public String showSuspensionRequests(Model model) {
+        // Pobieramy gotowe dane z widoku (Status 0 = Oczekujące)
+        var requests = suspensionService.getPendingRequestViews();
+        model.addAttribute("requests", requests);
+        return "admin-suspensions";
+    }
+
+    @PostMapping("/admin/wnioski/decyzja")
+    public String decideSuspension(@RequestParam Integer requestId,
+                                   @RequestParam boolean accepted,
+                                   RedirectAttributes ra) {
+        try {
+            suspensionService.resolveRequest(requestId, accepted);
+            if (accepted) {
+                ra.addFlashAttribute("successMessage", "Wniosek zatwierdzony. Zawodnik zawieszony na następny mecz.");
+            } else {
+                ra.addFlashAttribute("infoMessage", "Wniosek odrzucony.");
+            }
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", "Błąd: " + e.getMessage());
+        }
+        return "redirect:/admin/wnioski";
     }
 }

@@ -51,12 +51,7 @@ public class ContractService {
 
     @Transactional
     public void requestPlayerTransfer(Integer teamInLeagueId, Integer playerId) {
-        // Sprawdzamy czy nie ma już jakiegokolwiek wpisu (aktywnego lub niepotwierdzonego) w tym sezonie
-        // Zakładam, że jeśli był "historyczny" (active=false, confirmed=true), to można dodać go ponownie
-        // Ale najprościej sprawdzić czy nie ma aktywnego/oczekującego:
-
         Optional<PlayerInTeam> existing = playerInTeamRepository.findByPlayerIdAndTeamInLeagueId(playerId, teamInLeagueId);
-
         if (existing.isPresent()) {
             PlayerInTeam pit = existing.get();
             if (pit.isActive() || !pit.isConfirmed()) {
@@ -100,23 +95,10 @@ public class ContractService {
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono kontraktu."));
 
         if (!contract.isConfirmed()) {
-            // SCENARIUSZ A: Piłkarz jeszcze nie potwierdził (To tylko oferta).
-            // Niezależnie czy to trener anuluje ofertę, czy piłkarz ją odrzuca.
-            // Usuwamy rekord fizycznie z bazy, bo nie ma żadnych statystyk z nim związanych.
             playerInTeamRepository.delete(contract);
         } else {
-            // SCENARIUSZ B: Piłkarz był już w składzie (Confirmed = true).
-            // Niezależnie czy trener go wyrzuca, czy piłkarz odchodzi.
-            // NIE usuwamy rekordu, żeby nie zepsuć statystyk meczowych (Foreign Keys).
-            // Zmieniamy flagę Active na false (Soft Delete).
-
             contract.setActive(false);
-            // Confirmed zostaje true (bo historycznie był potwierdzony)
-
             playerInTeamRepository.save(contract);
-
-            // Opcjonalnie: Można by tu ustawić player.setLookingForClub(true),
-            // ale F32 mówi, że piłkarz robi to sam.
         }
     }
 
@@ -126,8 +108,6 @@ public class ContractService {
 
 
     public Integer getCoachCurrentTeamId(Integer coachId) {
-        // Korzystamy z metody w repozytorium, która ma JOIN do Season i sprawdza s.active = true
-        // Jeśli nie znajdzie (brak kontraktu lub sezon nieaktywny), zwraca null
         return coachInTeamRepository.findActiveTeamInLeagueIdByCoachId(coachId);
     }
 }

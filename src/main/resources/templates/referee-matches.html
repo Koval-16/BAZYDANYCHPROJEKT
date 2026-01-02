@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Panel Sędziego</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light container mt-5">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark">🚩 Protokół Meczowy</h2>
+        <p class="text-muted">Wprowadź wyniki zakończonych spotkań.</p>
+    </div>
+    <a href="/sedzia" class="btn btn-outline-secondary">Wróć do menu</a>
+</div>
+
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0 align-middle text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>Data</th>
+                <th class="text-end">Gospodarz</th>
+                <th style="width: 200px;">Wynik</th>
+                <th class="text-start">Gość</th>
+                <th>Akcja / Protokół</th> </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${matches}">
+
+                <td>
+                    <span th:text="${match.date}" class="fw-bold"></span>
+                </td>
+
+                <td class="text-end fw-bold" th:text="${match.hostName}">Gospodarz</td>
+
+                <td>
+                    <div th:if="${match.isPlayed}">
+                        <span class="badge bg-dark fs-5 px-3 py-2">
+                            <span th:text="${match.hostResult}">2</span> : <span th:text="${match.awayResult}">1</span>
+                        </span>
+                    </div>
+
+                    <div th:unless="${match.isPlayed}">
+                        <form th:action="@{/sedzia/mecze/wynik}" method="post" class="d-flex justify-content-center align-items-center gap-2">
+                            <input type="hidden" name="matchId" th:value="${match.id}"/>
+
+                            <input type="number" name="homeScore" class="form-control text-center fw-bold"
+                                   style="width: 60px;" min="0" required placeholder="0">
+
+                            <span class="fw-bold">:</span>
+
+                            <input type="number" name="awayScore" class="form-control text-center fw-bold"
+                                   style="width: 60px;" min="0" required placeholder="0">
+
+                            <button type="submit" class="btn btn-primary fw-bold btn-sm"
+                                    onclick="return confirm('Czy na pewno chcesz zatwierdzić wynik? Tej operacji nie cofniesz.');">
+                                OK
+                            </button>
+                        </form>
+                    </div>
+                </td>
+
+                <td class="text-start fw-bold" th:text="${match.awayName}">Gość</td>
+
+                <td>
+                    <div th:if="${match.isPlayed}">
+                        <div class="d-flex flex-column align-items-center gap-2">
+                            <span class="badge bg-success">✅ Zatwierdzony</span>
+
+                            <a th:href="@{/sedzia/mecze/{id}/statystyki(id=${match.id})}"
+                               class="btn btn-sm btn-outline-dark shadow-sm">
+                                📝 Uzupełnij Protokół
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:unless="${match.isPlayed}">
+                        <span class="badge bg-warning text-dark">⏳ Wpisz wynik</span>
+                    </div>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(matches)}">
+                <td colspan="5" class="text-center py-5 text-muted">
+                    Brak przypisanych meczów.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

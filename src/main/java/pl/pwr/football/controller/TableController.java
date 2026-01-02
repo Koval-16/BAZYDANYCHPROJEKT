@@ -16,10 +16,11 @@ public class TableController {
     }
 
     // F05: Widok tabeli ligowej
-    @GetMapping("/rozgrywki/{id}")
+    @GetMapping("/dom/rozgrywki/{id}")
     public String getTable(@PathVariable Integer id, Model model) {
         var table = tableService.getTable(id);
         model.addAttribute("table", table);
+        model.addAttribute("leagueSeasonId", id);
         return "table"; // Plik HTML z tabelą
     }
 }

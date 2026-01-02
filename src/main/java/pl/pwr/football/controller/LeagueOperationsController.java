@@ -51,6 +51,6 @@ public class LeagueOperationsController {
         } catch (Exception e) {
             ra.addFlashAttribute("errorMessage", "Błąd generowania: " + e.getMessage());
         }
-        return "redirect:/rozgrywki/" + id;
+        return "redirect:/dom/rozgrywki/" + id;
     }
 }

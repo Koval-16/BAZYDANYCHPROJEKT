@@ -16,7 +16,7 @@ public class MatchController {
     }
 
     // F06: Wszystkie mecze (np. panel sędziego)
-    @GetMapping("/mecze")
+    @GetMapping("/dom/mecze")
     public String getAllMatches(Model model) {
         var mecze = matchService.getAllMatches();
         model.addAttribute("mecze", mecze);
@@ -24,7 +24,7 @@ public class MatchController {
     }
 
     // F06: Mecze w konkretnej lidze (Terminarz)
-    @GetMapping("/rozgrywki/{id}/mecze")
+    @GetMapping("/dom/rozgrywki/{id}/mecze")
     public String getMatchesByLeague(@PathVariable Integer id, Model model) {
         var mecze = matchService.getMatchesByLeague(id);
         model.addAttribute("mecze", mecze);

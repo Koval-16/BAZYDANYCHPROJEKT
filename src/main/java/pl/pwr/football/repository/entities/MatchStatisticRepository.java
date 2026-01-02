@@ -7,4 +7,6 @@ import java.util.List;
 public interface MatchStatisticRepository extends JpaRepository<MatchStatistic, Integer> {
     // Pobierz wszystkie zdarzenia z danego meczu
     List<MatchStatistic> findByMatchId(Integer matchId);
+
+    Integer countByMatchIdAndPlayerInTeamIdAndType(Integer matchId, Integer playerInTeamId, Integer type);
 }

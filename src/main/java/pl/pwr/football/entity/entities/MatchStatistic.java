@@ -20,6 +20,11 @@ public class MatchStatistic {
     @Column(name = "StatystykaMeczuRodzaj", nullable = false)
     private Integer type;
 
+    public MatchStatistic(Integer matchId, Integer playerInTeamId, Integer type) {
+        this.matchId = matchId;
+        this.playerInTeamId = playerInTeamId;
+        this.type = type;
+    }
     public MatchStatistic() {}
 
     public Integer getId() { return id; }

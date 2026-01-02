@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Zarządzanie Drużynami</title>
+    <title>Zarządzanie Drużynami i Terminarzem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light container mt-5">
@@ -16,8 +16,14 @@
     </div>
 </div>
 
-<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+    <span th:text="${errorMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
 
 <div class="row mb-4">
     <div class="col-12">
@@ -30,15 +36,12 @@
         </div>
 
         <div th:if="${hasSchedule}" class="alert alert-success">
-            ✅ Terminarz dla tej ligi został już wygenerowany. Formularz dodawania drużyn jest zablokowany.
+            ✅ Terminarz dla tej ligi został wygenerowany. Poniżej możesz zarządzać meczami.
         </div>
     </div>
 </div>
 
-<div class="card shadow border-success mb-3" th:if="${!hasSchedule}">
-</div>
-
-<div class="row">
+<div class="row mb-5" th:if="${!hasSchedule}">
     <div class="col-md-4">
         <div class="card shadow border-success mb-3">
             <div class="card-header bg-success text-white">
@@ -64,9 +67,6 @@
                         <button type="submit" class="btn btn-success">Zapisz w lidze</button>
                     </div>
                 </form>
-                <div class="mt-3 text-center">
-                    <small class="text-muted">Brakuje drużyny? <a href="/ligi">Dodaj ją najpierw w panelu admina (jeśli zrobimy taką opcję)</a></small>
-                </div>
             </div>
         </div>
     </div>
@@ -82,27 +82,16 @@
                     <tr>
                         <th>#</th>
                         <th>Nazwa Drużyny</th>
-                        <th>Statystyki (M/Pkt)</th>
                         <th>Trener</th>
                     </tr>
                     </thead>
                     <tbody>
-
                     <tr th:each="row, iter : ${currentTeams}">
                         <td th:text="${iter.count}">1</td>
                         <td class="fw-bold" th:text="${row.teamName}">Real Madryt</td>
                         <td>
-                            <span class="badge bg-light text-dark border">
-                                M: <span th:text="${row.matchesPlayed}">0</span>
-                            </span>
-                            <span class="badge bg-warning text-dark border">
-                                Pkt: <span th:text="${row.points}">0</span>
-                            </span>
-                        </td>
-                        <td>
                             <form th:action="@{/admin/rozgrywki/{leagueId}/druzyny/{tilId}/trener(leagueId=${leagueSeason.id}, tilId=${row.id})}"
                                   method="post" class="d-flex gap-2">
-
                                 <select name="coachId" class="form-select form-select-sm" required>
                                     <option value="" selected>-- Wybierz --</option>
                                     <option th:each="coach : ${allCoaches}"
@@ -111,15 +100,13 @@
                                         Adam Nawałka
                                     </option>
                                 </select>
-
                                 <button type="submit" class="btn btn-sm btn-outline-primary">OK</button>
                             </form>
-
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(currentTeams)}">
                         <td colspan="3" class="text-center py-4 text-muted">
-                            Brak drużyn w tej lidze. Dodaj pierwszą używając formularza.
+                            Brak drużyn. Dodaj pierwszą używając formularza.
                         </td>
                     </tr>
                     </tbody>
@@ -129,5 +116,114 @@
     </div>
 </div>
 
+<div class="row" th:if="${hasSchedule}">
+    <div class="col-12">
+        <div class="card shadow border-dark">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">📅 Zarządzanie Terminarzem</h5>
+                <span class="badge bg-light text-dark" th:text="${schedule.size()} + ' meczów'"></span>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Mecz</th>
+                        <th>Data Oficjalna</th>
+                        <th>Sędzia</th> <th>Status / Propozycja</th>
+                        <th class="text-end">Decyzja Administratora</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="match : ${schedule}"
+                        th:classappend="${match.proposalStatus == 2} ? 'table-warning' : ''">
+
+                        <td>
+                            <span th:text="${match.hostName}" class="fw-bold"></span>
+                            <span class="text-muted mx-1">vs</span>
+                            <span th:text="${match.awayName}" class="fw-bold"></span>
+                        </td>
+
+                        <td>
+                            <span th:text="${match.date != null ? match.date : '---'}"></span>
+                        </td>
+
+                        <td>
+                            <div th:if="${match.proposalStatus == 3 and !match.isPlayed}">
+                                <form th:action="@{/admin/rozgrywki/{id}/mecze/sedzia(id=${leagueSeason.id})}" method="post" class="d-flex gap-1">
+                                    <input type="hidden" name="matchId" th:value="${match.id}"/>
+
+                                    <select name="refereeId" class="form-select form-select-sm" style="width: 150px;">
+                                        <option value="" th:selected="${match.refereeId == null}">-- Wybierz --</option>
+                                        <option th:each="ref : ${allReferees}"
+                                                th:value="${ref.id}"
+                                                th:text="${ref.name} + ' ' + ${ref.surname}"
+                                                th:selected="${match.refereeId == ref.id}">
+                                            Szymon Marciniak
+                                        </option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Zapisz sędziego">💾</button>
+                                </form>
+                            </div>
+
+                            <div th:if="${match.proposalStatus != 3 and !match.isPlayed}">
+                                <small class="text-muted fst-italic">
+                                    <i class="bi bi-lock"></i> Wymaga zatwierdzenia daty
+                                </small>
+                                <div th:if="${match.refereeId != null}" class="small text-dark mt-1">
+                                    Obecny: <span th:text="${match.refereeName}"></span>
+                                </div>
+                            </div>
+
+                            <div th:if="${match.isPlayed}">
+        <span class="badge bg-light text-dark border">
+            👮 <span th:text="${match.refereeName != null ? match.refereeName : 'Brak sędziego'}"></span>
+        </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div th:if="${match.proposalStatus == 2}">
+                                <span class="badge bg-warning text-dark">⚠️ Wymaga akceptacji</span>
+                                <div class="small fw-bold mt-1">
+                                    Prop: <span th:text="${match.proposedDate}" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div th:if="${match.proposalStatus == 3}">
+                                <span class="badge bg-success">✅ Zatwierdzone</span>
+                            </div>
+                            <div th:if="${match.proposalStatus == 1}">
+                                <span class="badge bg-secondary">Negocjacje</span>
+                            </div>
+                            <div th:if="${match.proposalStatus == 0 or match.proposalStatus == null}">
+                                <span class="badge bg-light text-dark border">Brak zmian</span>
+                            </div>
+                        </td>
+
+                        <td class="text-end">
+                            <div th:if="${match.proposalStatus == 2}">
+                                <div class="btn-group">
+                                    <form th:action="@{/admin/rozgrywki/{id}/mecze/decyzja(id=${leagueSeason.id})}" method="post">
+                                        <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                        <input type="hidden" name="accepted" value="true"/>
+                                        <button type="submit" class="btn btn-sm btn-success">✅</button>
+                                    </form>
+                                    <form th:action="@{/admin/rozgrywki/{id}/mecze/decyzja(id=${leagueSeason.id})}" method="post" class="ms-1">
+                                        <input type="hidden" name="matchId" th:value="${match.id}"/>
+                                        <input type="hidden" name="accepted" value="false"/>
+                                        <button type="submit" class="btn btn-sm btn-danger">🚫</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
