@@ -127,7 +127,7 @@ CREATE TABLE WnioskiOZawieszenie (
     StatystykaMeczuID INT NOT NULL REFERENCES StatystykiMeczu(StatystykaMeczuID),
     -- Status: 0=Oczekuje, 1=Zatwierdzony, 2=Odrzucony
     WniosekOZawieszenieStatus INT,
-    MeczZawieszeniaID INT REFERNCES Mecze(MeczID)
+    MeczZawieszeniaID INT REFERENCES Mecze(MeczID)
 );
 
 CREATE OR REPLACE VIEW WidokTabeliLigowej AS
